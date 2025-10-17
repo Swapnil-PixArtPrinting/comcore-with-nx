@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@app/aws": [
+        "libs/aws/src"
+      ],
+      "@app/aws/*": [
+        "libs/aws/src/*"
+      ],
+      "@app/clients": [
+        "libs/clients/src",
+        "libs/clients/src"
+      ],
+      "@app/clients/*": [
+        "libs/clients/src/*",
+        "libs/clients/src/*"
+      ],
+      "@app/common": [
+        "libs/common/src"
+      ],
+      "@app/common/*": [
+        "libs/common/src/*"
+      ],
+      "@app/corecommerce": [
+        "libs/corecommerce/src"
+      ],
+      "@app/corecommerce/*": [
+        "libs/corecommerce/src/*"
+      ],
+      "@app/sample": [
+        "libs/sample/src"
+      ],
+      "@app/sample/*": [
+        "libs/sample/src/*"
+      ]
+    }
+  }
+}
