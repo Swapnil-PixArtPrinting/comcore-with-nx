@@ -1,8 +1,11 @@
 import { WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { ContextIdFactory, ModuleRef } from '@nestjs/core';
-import { WorkspaceService } from '../../../../libs/common/src';
-import { CoreClientService, CoreConfigService } from '@comcore/ocs-lib-corecommerce';
+import { WorkspaceService } from '@comcore/ocs-lib-common';
+import {
+  CoreClientService,
+  CoreConfigService,
+} from '@comcore/ocs-lib-corecommerce';
 
 /**
  * WorkerHostProcessor is an abstract class that extends WorkerHost.
@@ -41,9 +44,13 @@ export abstract class WorkerHostProcessor extends WorkerHost {
     for (const key of Object.keys(this)) {
       const original = this[key];
       try {
-        this[key] = await this.moduleRef.resolve(original.constructor, contextId, {
-          strict: false,
-        });
+        this[key] = await this.moduleRef.resolve(
+          original.constructor,
+          contextId,
+          {
+            strict: false,
+          },
+        );
       } catch {
         // Skip if not resolvable
       }

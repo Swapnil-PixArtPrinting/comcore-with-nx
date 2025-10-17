@@ -1,1 +1,1 @@
-export * from "./tenant-config.service.impl";
+export * from './tenant-config.service.impl';

@@ -5,7 +5,11 @@ import { ConfigService } from '@nestjs/config';
 import type { ITenantConfigService } from '../workspace-configuration';
 import { TENANT_CONFIG_SERVICE } from '../workspace-configuration';
 import { JwtException } from './JwtException.exception';
-import { JsonWebTokenError, NotBeforeError, TokenExpiredError } from 'jsonwebtoken';
+import {
+  JsonWebTokenError,
+  NotBeforeError,
+  TokenExpiredError,
+} from 'jsonwebtoken';
 
 @Injectable()
 export class CustomJwtService {
@@ -36,7 +40,9 @@ export class CustomJwtService {
     return key.getPublicKey();
   }
 
-  async verifyToken(token: string|undefined): Promise<{ header: any; payload: any }> {
+  async verifyToken(
+    token: string | undefined,
+  ): Promise<{ header: any; payload: any }> {
     if (!token) {
       throw new JwtException('Unauthorised', HttpStatus.UNAUTHORIZED, [
         'Missing Bearer token',
@@ -84,9 +90,15 @@ export class CustomJwtService {
           'Provided JWT is trying to be used before nbf or iat claim',
         ]);
       } else if (err instanceof JsonWebTokenError) {
-        throw new JwtException('Unauthorised', HttpStatus.UNAUTHORIZED, ['Provided JWT signature verification failed']);
+        throw new JwtException('Unauthorised', HttpStatus.UNAUTHORIZED, [
+          'Provided JWT signature verification failed',
+        ]);
       } else {
-        throw new JwtException('Unexpected value error', HttpStatus.INTERNAL_SERVER_ERROR, ['JWT verification failed']);
+        throw new JwtException(
+          'Unexpected value error',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          ['JWT verification failed'],
+        );
       }
     }
   }

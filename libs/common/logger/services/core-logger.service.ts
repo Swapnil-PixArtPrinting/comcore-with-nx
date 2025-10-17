@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as winston from 'winston';
-import { LoggerConfigService } from "../config/logger.config";
-import { LogLevel } from "../enums/log-level.enum";
-import { LogEntry } from "../interfaces/log.interface";
+import { LoggerConfigService } from '../config/logger.config';
+import { LogLevel } from '../enums/log-level.enum';
+import { LogEntry } from '../interfaces/log.interface';
 
 @Injectable()
 export class CoreLoggerService {
@@ -57,7 +57,13 @@ export class CoreLoggerService {
   }
 
   // A helper method to handle the logging logic
-  private log(level: string, tags: string[], message: string, details?: Record<string, any>, trace?: any) {
+  private log(
+    level: string,
+    tags: string[],
+    message: string,
+    details?: Record<string, any>,
+    trace?: any,
+  ) {
     const logData: LogEntry = {
       message,
       timestamp: new Date().toISOString(),
@@ -80,7 +86,12 @@ export class CoreLoggerService {
     this.log(LogLevel.WARN, tags, message, details);
   }
 
-  error(tags: string[], message: string, details?: Record<string, any>, trace?: Record<string, any>) {
+  error(
+    tags: string[],
+    message: string,
+    details?: Record<string, any>,
+    trace?: Record<string, any>,
+  ) {
     this.log(LogLevel.ERROR, tags, message, details, trace);
   }
 

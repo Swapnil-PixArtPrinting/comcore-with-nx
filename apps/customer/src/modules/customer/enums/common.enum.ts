@@ -81,7 +81,8 @@ export const CUSTOMER_CUSTOM_FIELDS = {
   CF_CX_USER_SUBSCRIBER_DATE_OPTOUT: 'cx_user_subscriber_date_optout',
   CF_USER_SUBSCRIBER_CAMPAIGN_ID_OPTOUT: 'user_subscriber_campaign_id_optout',
   CF_USER_PREFERENCES_ANALYSIS: 'user_preferences_analysis',
-  CF_USER_PREFERENCES_ANALYSIS_ACCEPTANCE: 'user_preferences_analysis_acceptance',
+  CF_USER_PREFERENCES_ANALYSIS_ACCEPTANCE:
+    'user_preferences_analysis_acceptance',
   CF_USER_PREFERENCES_ANALYSIS_REMOVAL: 'user_preferences_analysis_removal',
   CF_USER_LAST_LOGIN: 'user_last_login',
   CF_USER_MODIFIED_DATE: 'user_modified_date',
@@ -207,7 +208,8 @@ export const CUSTOMER_METADATA_FIELDS = {
   CF_CX_USER_SUBSCRIBER_DATE_OPTOUT: 'cx_user_subscriber_date_optout',
   CF_USER_SUBSCRIBER_CAMPAIGN_ID_OPTOUT: 'user_subscriber_campaign_id_optout',
   CF_USER_PREFERENCES_ANALYSIS: 'user_preferences_analysis',
-  CF_USER_PREFERENCES_ANALYSIS_ACCEPTANCE: 'user_preferences_analysis_acceptance',
+  CF_USER_PREFERENCES_ANALYSIS_ACCEPTANCE:
+    'user_preferences_analysis_acceptance',
   CF_USER_PREFERENCES_ANALYSIS_REMOVAL: 'user_preferences_analysis_removal',
   CF_USER_LAST_LOGIN: 'user_last_login',
   CF_USER_MODIFIED_DATE: 'user_modified_date',

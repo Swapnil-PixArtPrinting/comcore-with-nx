@@ -61,3 +61,12 @@
           - rubiks
   package.json
   .env
+
+
+### Changelog
+  Fix the import paths in customer service to use the correct library names as per the Nx workspace structure.
+  Below is the mapping of folder againsts library names used in imports.
+    @comcore/ocs-lib-common -> libs/common
+    @comcore/ocs-aws-kit -> libs/aws
+    @comcore/ocs-lib-corecommerce -> libs/corecommerce
+  Please note this is a just a shared code between customer and order service and not published as npm package.

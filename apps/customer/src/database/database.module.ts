@@ -13,10 +13,18 @@ export class DatabaseModule {
           imports: [ConfigModule],
           inject: [ConfigService],
           useFactory: async (configService: ConfigService) => {
-            const required = ['DB_HOST', 'DB_PORT', 'DB_USERNAME', 'DB_PASSWORD', 'DB_DATABASE'];
+            const required = [
+              'DB_HOST',
+              'DB_PORT',
+              'DB_USERNAME',
+              'DB_PASSWORD',
+              'DB_DATABASE',
+            ];
             const missing = required.filter((key) => !configService.get(key));
             if (missing.length) {
-              console.warn(`⚠️ DB module skipped: Missing ENV vars: ${missing.join(', ')}`);
+              console.warn(
+                `⚠️ DB module skipped: Missing ENV vars: ${missing.join(', ')}`,
+              );
               return null; // this will break, so don't return null!
             }
 

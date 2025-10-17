@@ -2,7 +2,10 @@ import { OrderServiceClient } from '@comcore/ocs-clients-kit';
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CustomerModel } from '@comcore/ocs-lib-corecommerce';
 import { UPDATE_CUSTOMER_EMAIL_URL } from '../../../shared/constants/urls.constants';
-import { CUSTOMER_SERVICE, CustomerService } from '../../customer/services/customer.service';
+import {
+  CUSTOMER_SERVICE,
+  CustomerService,
+} from '../../customer/services/customer.service';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -24,11 +27,16 @@ export class OrderServiceToolsService {
    * @param oldEmail
    * @param newEmail
    */
-  async updateCustomerEmail(customer: CustomerModel, oldEmail: string, newEmail: string) {
+  async updateCustomerEmail(
+    customer: CustomerModel,
+    oldEmail: string,
+    newEmail: string,
+  ) {
     const url = `${this.baseUrl}${UPDATE_CUSTOMER_EMAIL_URL}`;
 
     const isCompany = this.customerService.getIsCompany(customer);
-    const companyIdReference = this.customerService.getCompanyIdFromCustomer(customer);
+    const companyIdReference =
+      this.customerService.getCompanyIdFromCustomer(customer);
     const isMLAMCustomer = isCompany || !!companyIdReference;
 
     const payload: Record<string, any> = { oldEmail, newEmail };

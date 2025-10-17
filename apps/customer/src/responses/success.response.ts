@@ -14,7 +14,12 @@ export class SuccessResponse extends BaseResponse {
    * @param data - Response data payload (optional, defaults to an empty object).
    * @param meta - Additional metadata for the response (optional, defaults to an empty object).
    */
-  constructor(message: string, statusCode: number, data: any = {}, meta: Record<string, any> = {}) {
+  constructor(
+    message: string,
+    statusCode: number,
+    data: any = {},
+    meta: Record<string, any> = {},
+  ) {
     super(true, statusCode, meta); // Calls BaseResponse constructor with success=true
     this.message = message;
     this.data = data;

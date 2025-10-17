@@ -7,7 +7,13 @@ import { CustomJwtModule } from './jwt';
 import { RedisCacheModule } from './redis-cache';
 
 @Module({
-  imports: [WorkspaceConfigurationModule, LoggerModule, ExecutionProfilerModule, CustomJwtModule, RedisCacheModule],
+  imports: [
+    WorkspaceConfigurationModule,
+    LoggerModule,
+    ExecutionProfilerModule,
+    CustomJwtModule,
+    RedisCacheModule,
+  ],
   providers: [CommonService],
   exports: [CommonService],
 })

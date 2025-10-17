@@ -4,7 +4,10 @@ import { forwardRef, Inject } from '@nestjs/common';
 import { WorkerHostProcessor } from '../../../queues/worker-host.processor';
 import { ModuleRef } from '@nestjs/core';
 import { LoggingService, WorkspaceService } from '@comcore/ocs-lib-common';
-import { CoreClientService, CoreConfigService } from '@comcore/ocs-lib-corecommerce';
+import {
+  CoreClientService,
+  CoreConfigService,
+} from '@comcore/ocs-lib-corecommerce';
 import {
   CUSTOMER_EMAIL_UPDATED,
   CUSTOMER_REGISTRATION,
@@ -14,8 +17,14 @@ import {
   EVENT_PUBLISHER_SERVICE,
   EventPublisherService,
 } from 'src/modules/utils/eventpublisher/services/event.service';
-import { CUSTOMER_MAPPER, CustomerMapper } from '../services/mappers/customer.mapper';
-import { CUSTOMER_SERVICE, CustomerService } from '../services/customer.service';
+import {
+  CUSTOMER_MAPPER,
+  CustomerMapper,
+} from '../services/mappers/customer.mapper';
+import {
+  CUSTOMER_SERVICE,
+  CustomerService,
+} from '../services/customer.service';
 
 @Processor('customer-queue')
 export class CustomerProcessor extends WorkerHostProcessor {
@@ -68,13 +77,25 @@ export class CustomerProcessor extends WorkerHostProcessor {
   private async handleCustomerRegistrationPCA(job: Job): Promise<void> {
     this.loggingService.info(['Job'], 'Customer Registration PCA', job.data); // Log the request
     const { customer, stores, customerData } = job.data;
-    await this.customerService.addStoreAfterRegistration(customer, stores, customerData);
+    await this.customerService.addStoreAfterRegistration(
+      customer,
+      stores,
+      customerData,
+    );
   }
 
   private async handleCustomerRegistrationEvent(job: Job): Promise<void> {
-    this.loggingService.info(['Job'], 'Customer Registration Event Publish', job.data); // Log the request
-    const { customer, guestCustomer, tenantId, group, eventMetaData } = job.data;
-    const updatedCustomer = await this.customerService.fetchCustomerById(customer.id, true);
+    this.loggingService.info(
+      ['Job'],
+      'Customer Registration Event Publish',
+      job.data,
+    ); // Log the request
+    const { customer, guestCustomer, tenantId, group, eventMetaData } =
+      job.data;
+    const updatedCustomer = await this.customerService.fetchCustomerById(
+      customer.id,
+      true,
+    );
     if (!guestCustomer) {
       const customerArray = await this.customerMapper.toArray(updatedCustomer, [
         CUSTOMER_EXPANDABLES.EXPAND_DETAILED,
@@ -90,7 +111,11 @@ export class CustomerProcessor extends WorkerHostProcessor {
   }
 
   private async handleCustomerEmailUpdated(job: Job): Promise<void> {
-    this.loggingService.info(['Job'], 'Customer Email Updated Event Publish', job.data);
+    this.loggingService.info(
+      ['Job'],
+      'Customer Email Updated Event Publish',
+      job.data,
+    );
     const { customer, oldEmail, newEmail } = job.data;
     const tenantId = this.customerService.getTenantId(customer);
     const customerGroupKey = this.customerService.getCustomerGroupKey(customer);

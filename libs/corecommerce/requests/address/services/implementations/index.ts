@@ -1,1 +1,1 @@
-export * from "./address.commercetool.service";
+export * from './address.commercetool.service';

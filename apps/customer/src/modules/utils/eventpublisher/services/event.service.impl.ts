@@ -1,9 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { EVENT_SOURCE, VAL_VERSION, VALID_EVENTS } from '../constants/event.constants';
+import {
+  EVENT_SOURCE,
+  VAL_VERSION,
+  VALID_EVENTS,
+} from '../constants/event.constants';
 import { v4 as uuidv4 } from 'uuid';
 import { IEvent, IMessageAttribute } from '../interfaces/event.interface';
 import { isEmpty } from 'class-validator';
-import { SNS_SERVICE, SnsConfigService, ISnsServiceInterface } from '@comcore/ocs-aws-kit';
+import {
+  SNS_SERVICE,
+  SnsConfigService,
+  ISnsServiceInterface,
+} from '@comcore/ocs-aws-kit';
 import { ConfigService } from '@nestjs/config';
 import { WorkspaceService } from '@comcore/ocs-lib-common';
 
@@ -63,7 +71,7 @@ export class EventPublisherServiceImpl {
       streamId = uuidv4();
     }
 
-    let eventArray: IEvent = {
+    const eventArray: IEvent = {
       id: eventId,
       streamId: streamId,
       eventChainIds: [],
@@ -86,7 +94,7 @@ export class EventPublisherServiceImpl {
       },
     };
 
-    let messageAttributes: IMessageAttribute = {
+    const messageAttributes: IMessageAttribute = {
       workspace: {
         DataType: 'String',
         StringValue: workspaceName,
@@ -116,7 +124,11 @@ export class EventPublisherServiceImpl {
     }
 
     if (this.configService.get('environment') != 'local') {
-      await this.snsService.publish(JSON.stringify(eventArray), eventName, messageAttributes);
+      await this.snsService.publish(
+        JSON.stringify(eventArray),
+        eventName,
+        messageAttributes,
+      );
     }
   }
 

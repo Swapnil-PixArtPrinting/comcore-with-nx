@@ -1,8 +1,13 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { RenderableException } from '../exceptions/RenderableException.exception';
 import { FailureResponse } from '../responses/failure.response';
-import { LoggingService } from '../../../../libs/common/src';
+import { LoggingService } from '@comcore/ocs-lib-common';
 
 /**
  * Filter that catches all exceptions that are instances of RenderableException and sends a custom response to the client.
@@ -22,20 +27,29 @@ export class RenderableExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>(); // Get the request object
 
     // Get the status code and response body
-    let status = exception instanceof RenderableException ? exception.getHttpStatus() : 500;
+    const status =
+      exception instanceof RenderableException
+        ? exception.getHttpStatus()
+        : 500;
     // Get the response body from the exception if it is a RenderableException
-    let responseBody: any = exception instanceof RenderableException ? exception.getDetail() : null;
+    const responseBody: any =
+      exception instanceof RenderableException ? exception.getDetail() : null;
 
     // Get the error message, detail, code, type, and input
-    let errorMessage = exception.message || responseBody?.message || 'Internal Server Error';
-    let errorDetail = responseBody || null;
-    let errorCode = exception instanceof RenderableException ? exception.getCode() : status; // Get correct custom error code
-    let errorType =
-      exception instanceof RenderableException ? exception.getErrorType() : 'InternalServerError';
-    let errorInput = exception instanceof RenderableException ? exception.getInput() : null;
+    const errorMessage =
+      exception.message || responseBody?.message || 'Internal Server Error';
+    const errorDetail = responseBody || null;
+    const errorCode =
+      exception instanceof RenderableException ? exception.getCode() : status; // Get correct custom error code
+    const errorType =
+      exception instanceof RenderableException
+        ? exception.getErrorType()
+        : 'InternalServerError';
+    const errorInput =
+      exception instanceof RenderableException ? exception.getInput() : null;
 
     // Create the error meta object
-    let errorMeta = {
+    const errorMeta = {
       timestamp: new Date().toISOString(),
       path: request.url,
       method: request.method,

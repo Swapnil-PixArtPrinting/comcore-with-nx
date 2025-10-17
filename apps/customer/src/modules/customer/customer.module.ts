@@ -38,7 +38,10 @@ import { OrderServiceToolsModule } from '../utils/order-service-tools/order-serv
 import { CUSTOMER_SERVICE, CustomerService } from './services/customer.service';
 import { MlamService } from './services/mlam.service';
 import { CustomerController } from './customer.controller';
-import { CUSTOMER_MAPPER, CustomerMapper } from './services/mappers/customer.mapper';
+import {
+  CUSTOMER_MAPPER,
+  CustomerMapper,
+} from './services/mappers/customer.mapper';
 import { AddressModule } from '../address/address.module';
 import { HttpModule } from '@nestjs/axios';
 

@@ -21,7 +21,9 @@ export class CustomerGroupFacade {
     }
 
     customerGroup =
-      await this.customerGroupFactoryRepository.repository.fetchGroupUsingKey(customerGroupKey);
+      await this.customerGroupFactoryRepository.repository.fetchGroupUsingKey(
+        customerGroupKey,
+      );
     await this.redisCacheService.set(
       CUSTOMER_GROUP_CACHE_PREFIX + '_' + customerGroupKey,
       customerGroup,

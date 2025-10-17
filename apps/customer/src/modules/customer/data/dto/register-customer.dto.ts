@@ -24,23 +24,33 @@ export class RegisterCustomerDto {
   @IsString()
   lastName?: string;
 
-  @ApiProperty({ description: 'Email of the customer', example: 'user@example.com' })
+  @ApiProperty({
+    description: 'Email of the customer',
+    example: 'user@example.com',
+  })
   @IsDefined({ message: 'Email is required' })
   @IsEmail({}, { message: 'Email is inappropriate' })
   email: string;
 
-  @ApiPropertyOptional({ description: 'Password (Required if externalAuth is not provided)' })
+  @ApiPropertyOptional({
+    description: 'Password (Required if externalAuth is not provided)',
+  })
   @ValidateIf((o) => !o.externalAuth)
-  @IsDefined({ message: 'Password is required when externalAuth is not provided' })
+  @IsDefined({
+    message: 'Password is required when externalAuth is not provided',
+  })
   @MinLength(8, { message: 'Password must be at least 8 characters long' })
   password?: string;
 
   @ApiPropertyOptional({
-    description: 'External authentication details (Required if password is not provided)',
+    description:
+      'External authentication details (Required if password is not provided)',
     type: () => ExternalAuthDto,
   })
   @ValidateIf((o) => !o.password)
-  @IsDefined({ message: 'ExternalAuth is required when password is not provided' })
+  @IsDefined({
+    message: 'ExternalAuth is required when password is not provided',
+  })
   @ValidateNested()
   @Type(() => ExternalAuthDto)
   externalAuth?: ExternalAuthDto;

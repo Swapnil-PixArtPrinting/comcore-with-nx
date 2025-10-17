@@ -17,12 +17,17 @@ export class ChannelFacade {
    * @param channelKey
    */
   async fetchChannelByKey(channelKey: string) {
-    let channel = await this.redisCacheService.get(CHANNEL_CACHE_PREFIX + '_' + channelKey);
+    let channel = await this.redisCacheService.get(
+      CHANNEL_CACHE_PREFIX + '_' + channelKey,
+    );
     if (channel) {
       return channel;
     }
 
-    channel = await this.channelRepositoryFactory.repository.fetchChannelByKey(channelKey);
+    channel =
+      await this.channelRepositoryFactory.repository.fetchChannelByKey(
+        channelKey,
+      );
     await this.redisCacheService.set(
       CHANNEL_CACHE_PREFIX + '_' + channelKey,
       channel,

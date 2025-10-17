@@ -1,1 +1,1 @@
-export * from "./env-config.service.impl";
+export * from './env-config.service.impl';

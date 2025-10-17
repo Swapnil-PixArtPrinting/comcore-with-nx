@@ -1,10 +1,8 @@
-import {
-    CustomFields,
-} from "@commercetools/platform-sdk";
-import { BaseModel } from '../../../../../corecommerce/src/interfaces/base-model.interface';
+import { CustomFields } from '@commercetools/platform-sdk';
+import { BaseModel } from 'libs/corecommerce/interfaces';
 
 export interface CustomerGroupModel extends BaseModel {
-    key?: string;
-    name: string;
-    custom?: CustomFields;
+  key?: string;
+  name: string;
+  custom?: CustomFields;
 }

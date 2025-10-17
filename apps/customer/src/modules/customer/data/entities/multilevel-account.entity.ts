@@ -1,5 +1,11 @@
 // src/your-module/multilevel-account.entity.ts
-import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('multilevel_account_last_root_key')
 export class MultilevelAccountLastRootKey {

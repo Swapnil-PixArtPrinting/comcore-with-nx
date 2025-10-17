@@ -9,17 +9,25 @@ import {
 import { AddressModel, CustomerModel } from '@comcore/ocs-lib-corecommerce';
 import { AddressType } from '../address.types';
 import { CustomerProviderRepository } from '../../customer/repositories/customer-provider.repository';
-import { Addresses, AddressStructure } from 'src/modules/customer/enums/customer.types';
+import {
+  Addresses,
+  AddressStructure,
+} from 'src/modules/customer/enums/customer.types';
 
 export class AddressMapper {
-  constructor(private readonly customerProviderRepository: CustomerProviderRepository) {}
+  constructor(
+    private readonly customerProviderRepository: CustomerProviderRepository,
+  ) {}
 
   /**
    *
    * @param address
    * @param formCustomFields
    */
-  toArray(address: AddressModel, formCustomFields: boolean = false): Record<string, unknown> {
+  toArray(
+    address: AddressModel,
+    formCustomFields: boolean = false,
+  ): Record<string, unknown> {
     if (formCustomFields) {
       return this.transformToCustomFields(address);
     }
@@ -44,7 +52,9 @@ export class AddressMapper {
       !filter['additionalAddressInfo'] ||
       filter['additionalAddressInfo'].toLowerCase() === 'billing'
     ) {
-      for (const address of Object.values(this.getAddresses(customer, 'billing'))) {
+      for (const address of Object.values(
+        this.getAddresses(customer, 'billing'),
+      )) {
         const addressArray = this.toArray(address);
         const isDefault = customer.defaultBillingAddressId === address.id;
         if (includeInheritanceDetails) {
@@ -66,7 +76,9 @@ export class AddressMapper {
       !filter['additionalAddressInfo'] ||
       filter['additionalAddressInfo']?.toLowerCase() === 'shipping'
     ) {
-      for (const address of Object.values(this.getAddresses(customer, 'shipping'))) {
+      for (const address of Object.values(
+        this.getAddresses(customer, 'shipping'),
+      )) {
         const addressArray = this.toArray(address);
         const isDefault = customer.defaultShippingAddressId === address.id;
         if (includeInheritanceDetails) {
@@ -103,7 +115,9 @@ export class AddressMapper {
    */
   getDefaultAddress(customer: CustomerModel, type: AddressType) {
     const defaultId =
-      type === 'billing' ? customer.defaultBillingAddressId : customer.defaultShippingAddressId;
+      type === 'billing'
+        ? customer.defaultBillingAddressId
+        : customer.defaultShippingAddressId;
 
     if (!defaultId) {
       return undefined;
@@ -117,16 +131,25 @@ export class AddressMapper {
    * @param customer
    * @param type
    */
-  getAddresses(customer: CustomerModel, type?: AddressType): Record<string, AddressModel> {
+  getAddresses(
+    customer: CustomerModel,
+    type?: AddressType,
+  ): Record<string, AddressModel> {
     const addressMap = Object.fromEntries(
-      (customer.addresses ?? []).map((address) => [address.id, address as AddressModel]),
+      (customer.addresses ?? []).map((address) => [
+        address.id,
+        address as AddressModel,
+      ]),
     );
 
     if (!type) {
       return addressMap;
     }
 
-    const ids = type === 'billing' ? customer.billingAddressIds : customer.shippingAddressIds;
+    const ids =
+      type === 'billing'
+        ? customer.billingAddressIds
+        : customer.shippingAddressIds;
     return ids.reduce((acc, id) => {
       const address = addressMap[id] as AddressModel | undefined;
       if (address) {
@@ -136,7 +159,10 @@ export class AddressMapper {
     }, {});
   }
 
-  async getAddressesWithInheritance(customer: CustomerModel, filter: string[] = []) {
+  async getAddressesWithInheritance(
+    customer: CustomerModel,
+    filter: string[] = [],
+  ) {
     const data = this.getAddressesArray(customer);
 
     const parentAddresses = {
@@ -152,7 +178,10 @@ export class AddressMapper {
     const missingCustomers: string[] = [];
 
     // Only if the additionalAddressInfo filter is not set or set to billing, we perform upward recursion
-    if (!filter['additionalAddressInfo'] || filter['additionalAddressInfo'] === 'billing') {
+    if (
+      !filter['additionalAddressInfo'] ||
+      filter['additionalAddressInfo'] === 'billing'
+    ) {
       const upwardFilter = { ...filter, ['additionalAddressInfo']: 'billing' };
       await this.upwardTraverser(
         customer,
@@ -164,7 +193,10 @@ export class AddressMapper {
     }
 
     // Only if the additionalAddressInfo filter is not set or set to shipping, we perform downward recursion
-    if (!filter['additionalAddressInfo'] || filter['additionalAddressInfo'] === 'shipping') {
+    if (
+      !filter['additionalAddressInfo'] ||
+      filter['additionalAddressInfo'] === 'shipping'
+    ) {
       const downwardFilter = {
         ...filter,
         ['additionalAddressInfo']: 'shipping',
@@ -212,8 +244,16 @@ export class AddressMapper {
       const parentId = fields?.['customerReference'];
       try {
         const parentCustomer =
-          await this.customerProviderRepository.repository.fetchCustomerById(parentId);
-        await this.upwardTraverser(parentCustomer, initiatedById, result, missingCustomers, filter);
+          await this.customerProviderRepository.repository.fetchCustomerById(
+            parentId,
+          );
+        await this.upwardTraverser(
+          parentCustomer,
+          initiatedById,
+          result,
+          missingCustomers,
+          filter,
+        );
       } catch {
         missingCustomers.push(parentId);
       }
@@ -238,9 +278,10 @@ export class AddressMapper {
       const customerRefs = fields.getFieldAsReferenceSet('customersReference');
       for (const reference of customerRefs) {
         try {
-          const childCustomer = await this.customerProviderRepository.repository.fetchCustomerById(
-            reference.id,
-          );
+          const childCustomer =
+            await this.customerProviderRepository.repository.fetchCustomerById(
+              reference.id,
+            );
           await this.downwardTraverser(
             childCustomer,
             initiatedById,
@@ -290,7 +331,9 @@ export class AddressMapper {
     filter: string[],
   ): Record<string, any> {
     if (filter && data && addressType) {
-      for (const [addressId, address] of Object.entries(data[addressType] || {})) {
+      for (const [addressId, address] of Object.entries(
+        data[addressType] || {},
+      )) {
         for (const [filterKey, filterValueRaw] of Object.entries(filter)) {
           if (!filterableFields.includes(filterKey)) {
             continue;
@@ -313,7 +356,10 @@ export class AddressMapper {
                 if (Array.isArray(parsedArray)) {
                   const sortedAddressValue = [...addressValue].sort();
                   const sortedFilterValue = [...parsedArray].sort();
-                  if (JSON.stringify(sortedAddressValue) === JSON.stringify(sortedFilterValue))
+                  if (
+                    JSON.stringify(sortedAddressValue) ===
+                    JSON.stringify(sortedFilterValue)
+                  )
                     continue;
                 }
               } catch {
@@ -374,24 +420,35 @@ export class AddressMapper {
           delete customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT];
         } else {
           if (key === ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT_AMOUNT) {
-            customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT]['centAmount'] = value;
+            customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT][
+              'centAmount'
+            ] = value;
           }
           if (key === ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT_CURRENCY) {
-            customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT]['currencyCode'] = value;
+            customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT][
+              'currencyCode'
+            ] = value;
           }
         }
-      } else if (key === ADDRESS_CUSTOM_FIELDS.CF_IS_COMPANY && value !== undefined) {
+      } else if (
+        key === ADDRESS_CUSTOM_FIELDS.CF_IS_COMPANY &&
+        value !== undefined
+      ) {
         customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_IS_COMPANY] =
           String(value).toLowerCase() === 'true';
       } else if (key === ADDRESS_CUSTOM_FIELDS.CF_TAX_IDS) {
-        customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_TAX_IDS] = JSON.stringify(value);
+        customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_TAX_IDS] =
+          JSON.stringify(value);
       } else if (key === ADDRESS_CUSTOM_FIELDS.CF_EXEMPTION_CATEGORIES) {
         customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_EXEMPTION_CATEGORIES] = (
           value as Record<string, unknown>[]
         )?.map((item) => JSON.stringify(item));
       } else if (key === ADDRESS_CUSTOM_FIELDS.CF_CREDIT_DAYS) {
         if (typeof value === 'string') {
-          customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_DAYS] = parseInt(value, 10);
+          customFields.fields[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_DAYS] = parseInt(
+            value,
+            10,
+          );
         }
       } else if (
         key === ADDRESS_CUSTOM_FIELDS.CF_INVOICE_CYCLE &&
@@ -443,17 +500,22 @@ export class AddressMapper {
         }
 
         if (fieldName === ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT) {
-          address[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT_CURRENCY] = fieldValue?.['currencyCode'];
-          address[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT_AMOUNT] = fieldValue?.['centAmount'];
+          address[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT_CURRENCY] =
+            fieldValue?.['currencyCode'];
+          address[ADDRESS_CUSTOM_FIELDS.CF_CREDIT_LIMIT_AMOUNT] =
+            fieldValue?.['centAmount'];
         } else if (fieldName === ADDRESS_CUSTOM_FIELDS.CF_TAX_IDS) {
           try {
             if (typeof fieldValue === 'string') {
-              address[ADDRESS_CUSTOM_FIELDS.CF_TAX_IDS] = JSON.parse(fieldValue);
+              address[ADDRESS_CUSTOM_FIELDS.CF_TAX_IDS] =
+                JSON.parse(fieldValue);
             }
           } catch {
             address[ADDRESS_CUSTOM_FIELDS.CF_TAX_IDS] = [];
           }
-        } else if (fieldName === ADDRESS_CUSTOM_FIELDS.CF_EXEMPTION_CATEGORIES) {
+        } else if (
+          fieldName === ADDRESS_CUSTOM_FIELDS.CF_EXEMPTION_CATEGORIES
+        ) {
           const exemptionCategories: unknown[] = [];
           if (Array.isArray(fieldValue)) {
             for (const json of fieldValue) {
@@ -464,7 +526,8 @@ export class AddressMapper {
               }
             }
           }
-          address[ADDRESS_CUSTOM_FIELDS.CF_EXEMPTION_CATEGORIES] = exemptionCategories;
+          address[ADDRESS_CUSTOM_FIELDS.CF_EXEMPTION_CATEGORIES] =
+            exemptionCategories;
         } else {
           address[fieldName] = fieldValue;
         }

@@ -1,29 +1,25 @@
 import { Injectable, Scope } from '@nestjs/common';
 import type { IWorkspaceService } from '../workspace/workspace.interface';
 
-const allowedWorkspaceArr: string[] = [
-    'pixart',
-    'easyflyer',
-    'exaprint'
-];
+const allowedWorkspaceArr: string[] = ['pixart', 'easyflyer', 'exaprint'];
 
 @Injectable({ scope: Scope.REQUEST })
-export class WorkspaceService implements IWorkspaceService{
-    private workspace: string | null = null;
+export class WorkspaceService implements IWorkspaceService {
+  private workspace: string | null = null;
 
-    setWorkspace(workspace: string) {
-        this.workspace = workspace;
-    }
+  setWorkspace(workspace: string) {
+    this.workspace = workspace;
+  }
 
-    getWorkspace(): string | null {
-        return this.workspace;
-    }
+  getWorkspace(): string | null {
+    return this.workspace;
+  }
 
-    getAllowedWorkspaces(): string[] {
-        return allowedWorkspaceArr;
-    }
+  getAllowedWorkspaces(): string[] {
+    return allowedWorkspaceArr;
+  }
 
-    isAllowedWorkspace(workspace:string): boolean {
-        return allowedWorkspaceArr.includes(workspace);
-    }
+  isAllowedWorkspace(workspace: string): boolean {
+    return allowedWorkspaceArr.includes(workspace);
+  }
 }

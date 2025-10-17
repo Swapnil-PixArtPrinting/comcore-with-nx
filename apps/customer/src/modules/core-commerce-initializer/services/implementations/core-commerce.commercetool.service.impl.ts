@@ -7,7 +7,9 @@ import { CoreConfigService } from '@comcore/ocs-lib-corecommerce';
  * @description Service for Core Commerce Commercetool
  */
 @Injectable()
-export class CoreCommerceCommercetoolServiceImpl implements ICoreCommerceInitializerService {
+export class CoreCommerceCommercetoolServiceImpl
+  implements ICoreCommerceInitializerService
+{
   /**
    * @description Constructor
    * @param coreCommerceConfigService
@@ -20,7 +22,9 @@ export class CoreCommerceCommercetoolServiceImpl implements ICoreCommerceInitial
     private readonly coreConfigService: CoreConfigService,
   ) {}
 
-  private async resolveEnvVars(config: Record<string, any>): Promise<Record<string, any>> {
+  private async resolveEnvVars(
+    config: Record<string, any>,
+  ): Promise<Record<string, any>> {
     const resolvedConfig: Record<string, any> = {};
 
     for (const key in config) {
@@ -41,7 +45,8 @@ export class CoreCommerceCommercetoolServiceImpl implements ICoreCommerceInitial
    */
   async initialize() {
     // Set Core Commerce Config
-    let coreCommerceConfig = this.coreCommerceConfigService.getCoreCommerceConfig();
+    let coreCommerceConfig =
+      this.coreCommerceConfigService.getCoreCommerceConfig();
     coreCommerceConfig = await this.resolveEnvVars(coreCommerceConfig);
     await this.coreConfigService.setCoreCommerceConfig(coreCommerceConfig);
     await this.coreConfigService.setCoreCommerceClientInstance();

@@ -1,5 +1,4 @@
-import { Address } from "../../address/address.types";
-
+import { Address } from '../../address/address.types';
 
 export interface Customer {
   id: string;

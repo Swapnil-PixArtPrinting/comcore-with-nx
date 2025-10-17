@@ -3,8 +3,14 @@ import { CustomerModel } from '@comcore/ocs-lib-corecommerce';
 import { CUSTOMER_SERVICE, CustomerService } from './customer.service';
 import { CUSTOMER_FACADE, CustomerFacade } from './customer.facade';
 import { CustomerProviderRepository } from '../repositories/customer-provider.repository';
-import { CUSTOMER_CUSTOM_FIELDS, PROFILE_USER_TYPE } from '../enums/common.enum';
-import { CUSTOMER_ERROR_CASE, CUSTOMER_ERROR_CODE } from '../enums/errorCode.enum';
+import {
+  CUSTOMER_CUSTOM_FIELDS,
+  PROFILE_USER_TYPE,
+} from '../enums/common.enum';
+import {
+  CUSTOMER_ERROR_CASE,
+  CUSTOMER_ERROR_CODE,
+} from '../enums/errorCode.enum';
 import { RenderableException } from '../../../exceptions/RenderableException.exception';
 import { CustomerKeyGenerator } from './customer-key-generator.service';
 
@@ -62,7 +68,10 @@ export class MlamService {
         CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMERS_REFERENCE,
       )
     ) {
-      const childrens = customer?.custom?.fields?.[CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMERS_REFERENCE];
+      const childrens =
+        customer?.custom?.fields?.[
+          CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMERS_REFERENCE
+        ];
       childrens.forEach((children) => {
         childIds.push(children.id);
       });
@@ -86,7 +95,9 @@ export class MlamService {
     }
 
     children.add(
-      await this.customerProviderRepository.repository.getCustomerReference(childCustomer.id),
+      await this.customerProviderRepository.repository.getCustomerReference(
+        childCustomer.id,
+      ),
     ); // Assuming you want to store just the ID, similar to CustomerReference::ofId()
 
     // Convert Set back to array before storing, if needed by your backend
@@ -243,7 +254,9 @@ export class MlamService {
 
         if (childrenRefs.length > 0) {
           const lastChildRef = childrenRefs[childrenRefs.length - 1];
-          const lastChild = await this.customerFacade.fetchCustomerById(lastChildRef.id); // Assuming this returns a CustomerModel
+          const lastChild = await this.customerFacade.fetchCustomerById(
+            lastChildRef.id,
+          ); // Assuming this returns a CustomerModel
           lastAssignedKey = lastChild?.key;
         }
       }
@@ -257,13 +270,17 @@ export class MlamService {
       );
     }
 
-    childCustomer = await this.customerProviderRepository.repository.updateCustomerWithAllActions(
-      childCustomer,
-      actions,
-      true,
-    );
+    childCustomer =
+      await this.customerProviderRepository.repository.updateCustomerWithAllActions(
+        childCustomer,
+        actions,
+        true,
+      );
 
-    parentCustomer = await this.updateCustomerReferences(parentCustomer, childCustomer);
+    parentCustomer = await this.updateCustomerReferences(
+      parentCustomer,
+      childCustomer,
+    );
 
     childCustomer = await this.setParent(childCustomer, parentCustomer);
 
@@ -287,6 +304,10 @@ export class MlamService {
    * @param customer
    */
   getImmediateParentId(customer: CustomerModel): string | null {
-    return customer?.custom?.fields?.[CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMER_REFERENCE] ?? null;
+    return (
+      customer?.custom?.fields?.[
+        CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMER_REFERENCE
+      ] ?? null
+    );
   }
 }

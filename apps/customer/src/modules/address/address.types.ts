@@ -1,4 +1,9 @@
-import { ADDRESS_TYPES, CreditPaymentMethod, InvoiceCycle, InvoiceCyclePeriod } from "./address.enum";
+import {
+  ADDRESS_TYPES,
+  CreditPaymentMethod,
+  InvoiceCycle,
+  InvoiceCyclePeriod,
+} from './address.enum';
 
 export interface Address {
   id: string;

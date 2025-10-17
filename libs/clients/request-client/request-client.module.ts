@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { LoggerModule, WorkspaceModule, RedisCacheModule } from "../../../common/src";
+import {
+  LoggerModule,
+  WorkspaceModule,
+  RedisCacheModule,
+} from '../../../common/src';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -9,7 +13,7 @@ import { ConfigModule } from '@nestjs/config';
     WorkspaceModule,
     LoggerModule,
     RedisCacheModule,
-    ConfigModule
+    ConfigModule,
   ],
   providers: [],
   exports: [],

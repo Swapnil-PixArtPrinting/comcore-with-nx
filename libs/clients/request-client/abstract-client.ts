@@ -1,7 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { AxiosRequestConfig, AxiosError } from 'axios';
-import { LoggingService } from "../../../common/src/logger/services/logging.service";
+import { LoggingService } from '../../../common/src/logger/services/logging.service';
 import { StatusCodeDescription } from './http-status-description';
 
 export abstract class AbstractClient {
@@ -46,7 +46,8 @@ export abstract class AbstractClient {
 
     const logHeaders = { ...this.headers };
     if (logHeaders['Authorization']) {
-      logHeaders['Authorization'] = logHeaders['Authorization'].length.toString();
+      logHeaders['Authorization'] =
+        logHeaders['Authorization'].length.toString();
     }
 
     const axiosConfig: AxiosRequestConfig = {
@@ -60,12 +61,16 @@ export abstract class AbstractClient {
     try {
       const requestBody = { ...(body || {}) };
 
-      this.loggingService.debug(['AbstractClient'], `${this.name}.request.body`, {
-        method,
-        url,
-        body: requestBody,
-        headers: logHeaders,
-      });
+      this.loggingService.debug(
+        ['AbstractClient'],
+        `${this.name}.request.body`,
+        {
+          method,
+          url,
+          body: requestBody,
+          headers: logHeaders,
+        },
+      );
 
       const response = await lastValueFrom(
         this.httpService.request({
@@ -76,15 +81,23 @@ export abstract class AbstractClient {
       );
 
       const responseData =
-        typeof response.data === 'object' ? response.data : JSON.parse(response.data);
+        typeof response.data === 'object'
+          ? response.data
+          : JSON.parse(response.data);
 
-      this.loggingService.debug(['AbstractClient'], `${this.name}.response.body`, {
-        body: responseData,
-      });
+      this.loggingService.debug(
+        ['AbstractClient'],
+        `${this.name}.response.body`,
+        {
+          body: responseData,
+        },
+      );
 
       if (responseData?.error) {
         throw new Error(
-          responseData?.message ? `message: ${responseData.message}` : defaultErrorMsg,
+          responseData?.message
+            ? `message: ${responseData.message}`
+            : defaultErrorMsg,
         );
       }
 
@@ -121,15 +134,20 @@ export abstract class AbstractClient {
         }
       }
 
-      this.loggingService.error(['AbstractClient'], `${this.name}-client.response.error`, {
-        endpoint: `${request?.method?.toUpperCase()} ${request?.url}`,
-        requestBody,
-        requestHeaders: logHeaders,
-        responseStatusCode: response?.status,
-        responseMessage: message,
-        responseBody,
-        errorLabel,
-      }, error);
+      this.loggingService.error(
+        ['AbstractClient'],
+        `${this.name}-client.response.error`,
+        {
+          endpoint: `${request?.method?.toUpperCase()} ${request?.url}`,
+          requestBody,
+          requestHeaders: logHeaders,
+          responseStatusCode: response?.status,
+          responseMessage: message,
+          responseBody,
+          errorLabel,
+        },
+        error,
+      );
 
       const isAuthError =
         response?.status === 401 && /token|auth/i.test(message || '');

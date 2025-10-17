@@ -34,7 +34,9 @@ export class RenderableException extends HttpException {
   ) {
     super(errorMessage, httpStatus || code); // Ensure message is passed correctly
     this.detail = detail; // Store the detail
-    this.httpStatus = RenderableException.isHttpCode(httpStatus) ? httpStatus : code; // Store the http status
+    this.httpStatus = RenderableException.isHttpCode(httpStatus)
+      ? httpStatus
+      : code; // Store the http status
     this.code = code; // Store the custom error code
     this.errorType = errorType; // Store the error type
     this.input = input; // Store the input
@@ -50,7 +52,9 @@ export class RenderableException extends HttpException {
 
       if (!this.detail) {
         this.detail =
-          previous instanceof RenderableException ? previous.getDetail() : this.getDetail();
+          previous instanceof RenderableException
+            ? previous.getDetail()
+            : this.getDetail();
       }
     }
 

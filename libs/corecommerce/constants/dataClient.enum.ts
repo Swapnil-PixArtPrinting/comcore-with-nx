@@ -1,3 +1,3 @@
 export const dataClient = {
-    COMMERCETOOL: "COMMERCETOOL"
+  COMMERCETOOL: 'COMMERCETOOL',
 } as const;

@@ -14,7 +14,11 @@ export class BaseResponse {
    * @param statusCode - HTTP status code for the response.
    * @param meta - Additional metadata for the response (optional).
    */
-  constructor(success: boolean, statusCode: number, meta: Record<string, any> = {}) {
+  constructor(
+    success: boolean,
+    statusCode: number,
+    meta: Record<string, any> = {},
+  ) {
     this.success = success;
     this.statusCode = statusCode;
     this.meta = {

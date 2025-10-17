@@ -1,3 +1,2 @@
-
-export * from "./dataClient.enum";
-export * from "./request.enum";
+export * from './dataClient.enum';
+export * from './request.enum';

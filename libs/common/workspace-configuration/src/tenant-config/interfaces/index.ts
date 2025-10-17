@@ -1,1 +1,1 @@
-export * from "./tenantConfig.interface";
+export * from './tenantConfig.interface';

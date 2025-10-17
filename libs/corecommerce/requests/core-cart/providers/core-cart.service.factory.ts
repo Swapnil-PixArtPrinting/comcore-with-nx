@@ -5,18 +5,18 @@ import { ICommerceCartService, CommerceCartServiceImpl } from '../services';
 
 @Injectable()
 export class CommerceCartServiceFactory {
-    constructor(
-      private readonly coreClientService: CoreClientService,
-      @Inject(forwardRef(() => CommerceCartServiceImpl))
-      private readonly commerceCartService: CommerceCartServiceImpl,
-    ) {}
+  constructor(
+    private readonly coreClientService: CoreClientService,
+    @Inject(forwardRef(() => CommerceCartServiceImpl))
+    private readonly commerceCartService: CommerceCartServiceImpl,
+  ) {}
 
-    get service(): ICommerceCartService {
-        switch (this.coreClientService.getDataClient()) {
-            case dataClient.COMMERCETOOL:
-                return this.commerceCartService;
-            default:
-                return this.commerceCartService;
-        }
+  get service(): ICommerceCartService {
+    switch (this.coreClientService.getDataClient()) {
+      case dataClient.COMMERCETOOL:
+        return this.commerceCartService;
+      default:
+        return this.commerceCartService;
     }
+  }
 }

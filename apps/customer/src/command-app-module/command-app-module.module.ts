@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { CommandModule } from 'nestjs-command';
-import {EnvSetupCommand} from "../env-setup/env-setup.command";
-import {SecretsManagerModule} from "../../../../libs/aws/src";
-import {EnvSetupModule} from "../env-setup/env-setup.module";
-import {ConfigModule} from "@nestjs/config";
+import { EnvSetupCommand } from '../env-setup/env-setup.command';
+import { SecretsManagerModule } from '@comcore/ocs-aws-kit';
+import { EnvSetupModule } from '../env-setup/env-setup.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -15,8 +15,6 @@ import {ConfigModule} from "@nestjs/config";
       isGlobal: true,
     }),
   ],
-  providers: [
-    EnvSetupCommand,
-  ],
+  providers: [EnvSetupCommand],
 })
 export class CommandAppModule {}

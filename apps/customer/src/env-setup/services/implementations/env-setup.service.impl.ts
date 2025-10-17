@@ -1,14 +1,9 @@
 import { IEnvSetupService } from '../env-setup.service.interface';
 import { Inject } from '@nestjs/common';
-import { ENV_CONFIG_SERVICE } from '../../../../../../libs/common/src';
-import type { IEnvConfigService } from '../../../../../../libs/common/src';
-import {
-  SECRETS_MANAGER_SERVICE,
-  SmConfigService,
-} from '../../../../../../libs/aws/src';
-import type {
-  ISecretsManagerServiceInterface,
-} from '../../../../../../libs/aws/src';
+import { ENV_CONFIG_SERVICE } from '@comcore/ocs-lib-common';
+import type { IEnvConfigService } from '@comcore/ocs-lib-common';
+import { SECRETS_MANAGER_SERVICE, SmConfigService } from '@comcore/ocs-aws-kit';
+import type { ISecretsManagerServiceInterface } from '@comcore/ocs-aws-kit';
 import { ConfigService } from '@nestjs/config';
 import { promises as fs } from 'fs';
 import * as path from 'node:path';
@@ -44,7 +39,10 @@ export class EnvSetupServiceImpl implements IEnvSetupService {
    * @param params
    * @private
    */
-  private substituteParams(content: string, params: Record<string, string>): string {
+  private substituteParams(
+    content: string,
+    params: Record<string, string>,
+  ): string {
     for (const key in params) {
       content = content.replace(new RegExp(`%%${key}%%`, 'g'), params[key]);
     }
@@ -60,7 +58,8 @@ export class EnvSetupServiceImpl implements IEnvSetupService {
     const appEnv = this.configService.get('APP_ENV') || '';
     const appBranchName = this.configService.get('APP_BRANCH_NAME') || 'master';
 
-    const envVariables = await this.envConfigService.fetchEnvVariables('customer');
+    const envVariables =
+      await this.envConfigService.fetchEnvVariables('customer');
 
     // Set the app URL based on the app environment
     let appUrl: string;
@@ -86,7 +85,10 @@ export class EnvSetupServiceImpl implements IEnvSetupService {
    * @param params
    * @param testFile
    */
-  public async createEnvFile(params: Record<string, string>, testFile?: string): Promise<boolean> {
+  public async createEnvFile(
+    params: Record<string, string>,
+    testFile?: string,
+  ): Promise<boolean> {
     const basePath = path.resolve(__dirname, '../../../../');
     const filePathEnv: string = path.join(basePath, '.env');
 
@@ -98,8 +100,12 @@ export class EnvSetupServiceImpl implements IEnvSetupService {
       testing: path.join(basePath, '.env.defaults.testing'),
     };
 
-    const parameterStoreFile = path.join(basePath, this.FILENAME_AWS_PARAMETERS_TEMPLATE);
-    const envOutputFile = testFile ?? path.join(basePath, this.FILENAME_DEFAULT_ENV);
+    const parameterStoreFile = path.join(
+      basePath,
+      this.FILENAME_AWS_PARAMETERS_TEMPLATE,
+    );
+    const envOutputFile =
+      testFile ?? path.join(basePath, this.FILENAME_DEFAULT_ENV);
 
     // Check if parameter store file exists
     try {
@@ -109,8 +115,14 @@ export class EnvSetupServiceImpl implements IEnvSetupService {
     }
 
     // Read the parameter store file and substitute the parameters with the values from the params object
-    let parameterStoreFileContents = await fs.readFile(parameterStoreFile, 'utf8');
-    parameterStoreFileContents = this.substituteParams(parameterStoreFileContents, params);
+    let parameterStoreFileContents = await fs.readFile(
+      parameterStoreFile,
+      'utf8',
+    );
+    parameterStoreFileContents = this.substituteParams(
+      parameterStoreFileContents,
+      params,
+    );
 
     let returnStatus = true;
     const defaultFile = defaultFiles[this.configService.get('APP_ENV')];
@@ -128,7 +140,11 @@ export class EnvSetupServiceImpl implements IEnvSetupService {
 
     // Combine the AWS personal credentials, default env file contents and parameter store file contents
     const finalContent =
-      awsPersonalCredentials + '\n' + defaultFileContents + '\n' + parameterStoreFileContents;
+      awsPersonalCredentials +
+      '\n' +
+      defaultFileContents +
+      '\n' +
+      parameterStoreFileContents;
 
     // Delete the .env file if it exists
     try {
@@ -160,7 +176,9 @@ export class EnvSetupServiceImpl implements IEnvSetupService {
     this.smConfigService.setEnvConfig(envConfig);
 
     // Get the parameters from the parameter store
-    let parametersArray = await this.secretsManagerService.getParams(envConfig['base-path']);
+    let parametersArray = await this.secretsManagerService.getParams(
+      envConfig['base-path'],
+    );
 
     // Fetch the data from the secrets manager
     parametersArray = {

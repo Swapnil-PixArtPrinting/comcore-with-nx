@@ -44,7 +44,9 @@ export class CustomerKeyGenerator {
   }
 
   public generateNextId(parentKey = '', lastAssignedKey = ''): string {
-    const parentKeyDashCount = parentKey ? (parentKey.match(/-/g) || []).length : 0;
+    const parentKeyDashCount = parentKey
+      ? (parentKey.match(/-/g) || []).length
+      : 0;
     const lastAssignedKeyDashCount = lastAssignedKey
       ? (lastAssignedKey.match(/-/g) || []).length
       : 0;
@@ -56,7 +58,9 @@ export class CustomerKeyGenerator {
       const sameHierarchy =
         parentKeyDashCount <= lastAssignedKeyDashCount &&
         lastAssignedKeyDashCount - parentKeyDashCount === 1 &&
-        parentKeySegments.every((seg, idx) => seg === lastAssignedKeySegments[idx]);
+        parentKeySegments.every(
+          (seg, idx) => seg === lastAssignedKeySegments[idx],
+        );
 
       if (!sameHierarchy) {
         throw new Error('Invalid Hierarchy input error');

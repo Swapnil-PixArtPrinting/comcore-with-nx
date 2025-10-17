@@ -18,6 +18,10 @@ import { RedisCacheModule } from '@comcore/ocs-lib-common';
     CustomerGroupFacade,
     CustomerGroupService,
   ],
-  exports: [CustomerGroupService, CustomerGroupRepositoryFactory, CustomerGroupFacade],
+  exports: [
+    CustomerGroupService,
+    CustomerGroupRepositoryFactory,
+    CustomerGroupFacade,
+  ],
 })
 export class CustomerGroupModule {}

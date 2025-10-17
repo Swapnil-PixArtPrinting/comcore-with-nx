@@ -4,7 +4,7 @@ import { EnvSetupServiceImpl } from './services/implementations/env-setup.servic
 import { ENV_SETUP_SERVICE } from './services/env-setup.service.interface';
 import { SecretsManagerModule } from '@comcore/ocs-aws-kit';
 import { EnvConfigModule } from '@comcore/ocs-lib-common';
-import {ConfigModule} from "@nestjs/config";
+import { ConfigModule } from '@nestjs/config';
 
 /**
  * EnvSetupModule handles environment setup and configuration.

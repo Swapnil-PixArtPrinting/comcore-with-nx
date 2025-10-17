@@ -1,9 +1,16 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { OrderServiceToolsService } from './order-service-tools.service';
-import { RequestClientModule, OrderServiceClient } from '@comcore/ocs-clients-kit';
+import {
+  RequestClientModule,
+  OrderServiceClient,
+} from '@comcore/ocs-clients-kit';
 import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
-import { LoggerModule, RedisCacheModule, WorkspaceModule } from '@comcore/ocs-lib-common';
+import {
+  LoggerModule,
+  RedisCacheModule,
+  WorkspaceModule,
+} from '@comcore/ocs-lib-common';
 import { CustomerModule } from '../../customer/customer.module';
 
 @Module({

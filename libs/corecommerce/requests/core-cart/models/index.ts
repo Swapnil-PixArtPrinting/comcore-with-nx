@@ -1,1 +1,1 @@
-export * from "./core-cart.model";
+export * from './core-cart.model';

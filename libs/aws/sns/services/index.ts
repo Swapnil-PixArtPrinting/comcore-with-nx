@@ -1,2 +1,2 @@
-export * from "./sns.services.interface";
-export * from "./implementations";
+export * from './sns.services.interface';
+export * from './implementations';

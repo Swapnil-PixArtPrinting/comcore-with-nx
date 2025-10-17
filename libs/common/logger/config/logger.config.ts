@@ -2,9 +2,8 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class LoggerConfigService {
-
-  getLogToFile(): string|undefined {
-    return "storage/"+process.env.APP_LOG_FILENAME;
+  getLogToFile(): string | undefined {
+    return 'storage/' + process.env.APP_LOG_FILENAME;
   }
 
   getAppEnvironment(): string {

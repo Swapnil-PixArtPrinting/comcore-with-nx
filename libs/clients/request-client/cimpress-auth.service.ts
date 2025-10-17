@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AbstractClient } from './abstract-client';
-import { LoggingService, RedisCacheService } from "../../../common/src";
+import { LoggingService, RedisCacheService } from '../../../common/src';
 
 export interface CimpressAuthClientOptions {
   clientId: string;
@@ -34,7 +34,7 @@ export class CimpressAuthClient extends AbstractClient {
     @Inject(RedisCacheService)
     private readonly redisCacheService: RedisCacheService,
     @Inject('CIMPRESS_AUTH_OPTIONS')
-    private readonly options: CimpressAuthClientOptions
+    private readonly options: CimpressAuthClientOptions,
   ) {
     super(httpService, loggingService, `${options.name}-cimpress`);
 
@@ -59,7 +59,7 @@ export class CimpressAuthClient extends AbstractClient {
       : await this.redisCacheService.get<string>(this.tokenCacheKey as string);
     if (cachedToken) return cachedToken;
 
-    const body : TokenRequestPayload = {
+    const body: TokenRequestPayload = {
       client_id: this.clientId,
       client_secret: this.clientSecret,
       audience: this.audience,
@@ -77,14 +77,22 @@ export class CimpressAuthClient extends AbstractClient {
     const token = responseData.access_token;
     const expiry = Math.floor(responseData.expires_in / 60) - 4;
 
-    this.loggingService.info(['CimpressAuthClient'], `Cached ${this.name} token`, {
-      key: this.tokenCacheKey,
-      expires_in: responseData.expires_in,
-      expiry,
-    });
+    this.loggingService.info(
+      ['CimpressAuthClient'],
+      `Cached ${this.name} token`,
+      {
+        key: this.tokenCacheKey,
+        expires_in: responseData.expires_in,
+        expiry,
+      },
+    );
 
     if (expiry > 0) {
-      await this.redisCacheService.set(this.tokenCacheKey as string, token, expiry * 60 * 1000);
+      await this.redisCacheService.set(
+        this.tokenCacheKey as string,
+        token,
+        expiry * 60 * 1000,
+      );
     }
 
     return token;

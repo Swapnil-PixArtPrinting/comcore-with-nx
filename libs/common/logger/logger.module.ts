@@ -12,14 +12,14 @@ import { CoreLoggerService } from './services/core-logger.service';
     HttpContextService,
     RedactorService,
     LoggerConfigService,
-    CoreLoggerService
+    CoreLoggerService,
   ],
   exports: [
     LoggingService,
     HttpContextService,
     RedactorService,
     LoggerConfigService,
-    CoreLoggerService
+    CoreLoggerService,
   ],
 })
 export class LoggerModule {}

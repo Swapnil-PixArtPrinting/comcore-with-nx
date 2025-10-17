@@ -40,17 +40,24 @@ export class CustomerMapper {
    * @param customer
    * @param expansions
    */
-  async toArray(customerModel: CustomerModel, expansions: string[]): Promise<Partial<Customer>> {
+  async toArray(
+    customerModel: CustomerModel,
+    expansions: string[],
+  ): Promise<Partial<Customer>> {
     // Convert all expansions to uppercase and trim
     expansions = expansions.map((item) => item.trim().toUpperCase());
-    expansions = expansions.filter((item) => Object.values(CUSTOMER_EXPANDABLES).includes(item));
+    expansions = expansions.filter((item) =>
+      Object.values(CUSTOMER_EXPANDABLES).includes(item),
+    );
 
     // Call the toArrayLite method to get the basic customer setup
     const customer = await this.toArrayLite(customerModel, expansions);
     return customer;
   }
 
-  async getExternalAuthParse(externalAuths: Array<string>): Promise<Array<JSON>> {
+  async getExternalAuthParse(
+    externalAuths: Array<string>,
+  ): Promise<Array<JSON>> {
     const externalAuthReponse = [];
     externalAuths.forEach((externalAuth) => {
       externalAuthReponse.push(JSON.parse(externalAuth));
@@ -84,7 +91,10 @@ export class CustomerMapper {
     if (standardFields.length > 0) {
       for (const element of standardFields) {
         // Object.prototype.hasOwnProperty.call to check if the property exists avoid obj.hasOwnProperty
-        if (customer && Object.prototype.hasOwnProperty.call(customer, element)) {
+        if (
+          customer &&
+          Object.prototype.hasOwnProperty.call(customer, element)
+        ) {
           profileResponse[element] = customer[element] ?? null;
         }
       }
@@ -100,7 +110,9 @@ export class CustomerMapper {
 
     if (customFields.length > 0 && customerCustomFields) {
       for (const element of customFields) {
-        if (Object.prototype.hasOwnProperty.call(customerCustomFields, element)) {
+        if (
+          Object.prototype.hasOwnProperty.call(customerCustomFields, element)
+        ) {
           switch (element) {
             case CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM:
               profileResponse[CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM] =
@@ -115,35 +127,45 @@ export class CustomerMapper {
               break;
             case CUSTOMER_CUSTOM_FIELDS.CF_EXTERNAL_AUTH:
               profileResponse[CUSTOMER_CUSTOM_FIELDS.CF_EXTERNAL_AUTH] =
-                await this.getExternalAuthParse(customerCustomFields?.[element]);
+                await this.getExternalAuthParse(
+                  customerCustomFields?.[element],
+                );
               break;
             case CUSTOMER_CUSTOM_FIELDS.CF_IS_LARGE_ACCOUNT:
               profileResponse['isLargeAccount'] = true;
               break;
             case CUSTOMER_CUSTOM_FIELDS.CF_WALLET_INFO: {
               const walletInfo =
-                JSON.parse(customerCustomFields?.[CUSTOMER_CUSTOM_FIELDS.CF_WALLET_INFO]) || [];
+                JSON.parse(
+                  customerCustomFields?.[CUSTOMER_CUSTOM_FIELDS.CF_WALLET_INFO],
+                ) || [];
               if (Array.isArray(walletInfo) && walletInfo.length > 0) {
-                profileResponse[CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMER_HASWALLET] = true;
+                profileResponse[CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMER_HASWALLET] =
+                  true;
               }
               break;
             }
             default:
               switch (CUSTOMER_CUSTOM_FIELDS_DATATYPE[element] ?? '') {
                 case 'array':
-                  profileResponse[element] = customerCustomFields[element] ?? [];
+                  profileResponse[element] =
+                    customerCustomFields[element] ?? [];
                   break;
                 case 'json':
-                  profileResponse[element] = customerCustomFields[element] ?? {};
+                  profileResponse[element] =
+                    customerCustomFields[element] ?? {};
                   break;
                 case 'datetime':
-                  profileResponse[element] = customerCustomFields[element] ?? null;
+                  profileResponse[element] =
+                    customerCustomFields[element] ?? null;
                   break;
                 case 'boolean':
-                  profileResponse[element] = customerCustomFields[element] ?? false;
+                  profileResponse[element] =
+                    customerCustomFields[element] ?? false;
                   break;
                 default:
-                  profileResponse[element] = customerCustomFields[element] ?? null;
+                  profileResponse[element] =
+                    customerCustomFields[element] ?? null;
                   break;
               }
               break;
@@ -176,7 +198,10 @@ export class CustomerMapper {
    * @param customer
    * @param expansions
    */
-  async toArrayLite(customer: CustomerModel, expansions?: string[]): Promise<Partial<Customer>> {
+  async toArrayLite(
+    customer: CustomerModel,
+    expansions?: string[],
+  ): Promise<Partial<Customer>> {
     // Get the profile data from the customer for the required fields
     const profile = await this.getCustomerRelatedData(customer, [
       CUSTOMER_STANDARD_FIELDS.id,
@@ -207,14 +232,16 @@ export class CustomerMapper {
 
     // --- Addresses ---
     if (expansions.includes(CUSTOMER_EXPANDABLES.EXPAND_INHERIT_ADDRESSES)) {
-      profile['addresses'] = await this.addressService.getAddressesWithInheritance(customer);
+      profile['addresses'] =
+        await this.addressService.getAddressesWithInheritance(customer);
     } else if (expansions.includes(CUSTOMER_EXPANDABLES.EXPAND_ADDRESSES)) {
       profile['addresses'] = this.addressService.getCustomerAddresses(customer);
     }
 
     // --- Business Data ---
     if (expansions.includes(CUSTOMER_EXPANDABLES.EXPAND_DETAILED) && customer) {
-      profile[CUSTOMER_STANDARD_FIELDS.companyName] = customer.companyName ?? null;
+      profile[CUSTOMER_STANDARD_FIELDS.companyName] =
+        customer.companyName ?? null;
 
       // Add the business data fields to the profile
       const businessDataFields = [
@@ -223,7 +250,10 @@ export class CustomerMapper {
         CUSTOMER_CUSTOM_FIELDS.CF_IS_LARGE_ACCOUNT,
       ];
 
-      const businessData = await this.getCustomerRelatedData(customer, businessDataFields);
+      const businessData = await this.getCustomerRelatedData(
+        customer,
+        businessDataFields,
+      );
       delete businessData[CUSTOMER_CUSTOM_FIELDS.CF_LOGIN_MEDIUM];
       profile['businessData'] = businessData;
     }
@@ -232,13 +262,18 @@ export class CustomerMapper {
     const rootParentId = this.mlamService.getParentId(customer);
     const immediateParentId = this.mlamService.getImmediateParentId(customer);
     const isCompany = this.mlamService.isCompany(customer);
-    const childrens = customer?.custom?.fields?.[CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMERS_REFERENCE];
+    const childrens =
+      customer?.custom?.fields?.[CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMERS_REFERENCE];
     if (rootParentId || isCompany) {
       const mlam = {
         childrens: [],
         immediateParentId: immediateParentId,
         rootParentId: rootParentId,
-        nodeType: this.getNodeType(immediateParentId, isCompany, childrens?.length > 0),
+        nodeType: this.getNodeType(
+          immediateParentId,
+          isCompany,
+          childrens?.length > 0,
+        ),
       };
       if (childrens?.length > 0) {
         if (expansions.includes(CUSTOMER_EXPANDABLES.EXPAND_CHILDREN)) {
@@ -246,7 +281,9 @@ export class CustomerMapper {
           if (customer?.custom && childrens?.length > 0) {
             for (const children of childrens) {
               if (children?.obj) {
-                mlam['childrens'].push(await this.toArrayLite(children?.obj, expansions));
+                mlam['childrens'].push(
+                  await this.toArrayLite(children?.obj, expansions),
+                );
               }
             }
           }
@@ -255,7 +292,8 @@ export class CustomerMapper {
         }
       }
       if (customer?.custom?.fields?.[CUSTOMER_CUSTOM_FIELDS.CF_COMPANY_ROLE]) {
-        mlam['companyRole'] = customer.custom.fields[CUSTOMER_CUSTOM_FIELDS.CF_COMPANY_ROLE];
+        mlam['companyRole'] =
+          customer.custom.fields[CUSTOMER_CUSTOM_FIELDS.CF_COMPANY_ROLE];
       }
       if (customer?.key) {
         mlam['key'] = customer.key;
@@ -286,7 +324,10 @@ export class CustomerMapper {
     // --- Auth ---
     const auth = {
       externalAuth: profile[CUSTOMER_CUSTOM_FIELDS.CF_EXTERNAL_AUTH],
-      loginMedium: customer.custom?.fields?.loginMedium || customer.authenticationMode || null,
+      loginMedium:
+        customer.custom?.fields?.loginMedium ||
+        customer.authenticationMode ||
+        null,
     };
     delete profile[CUSTOMER_CUSTOM_FIELDS.CF_EXTERNAL_AUTH];
 
@@ -304,8 +345,12 @@ export class CustomerMapper {
     // --- Customer Group ---
     const customerGroup = {} as ResourceIdentity;
     if (customer?.customerGroup || customer?.customerGroup?.obj) {
-      customerGroup['key'] = customer?.customerGroup ? customer?.customerGroup?.obj?.key : null;
-      customerGroup['id'] = customer?.customerGroup ? customer?.customerGroup?.obj?.id : null;
+      customerGroup['key'] = customer?.customerGroup
+        ? customer?.customerGroup?.obj?.key
+        : null;
+      customerGroup['id'] = customer?.customerGroup
+        ? customer?.customerGroup?.obj?.id
+        : null;
       profile['customerGroup'] = customerGroup;
     }
 

@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { WorkspaceService } from '../../../../libs/common/src';
+import { WorkspaceService } from '@comcore/ocs-lib-common';
 
 @Injectable()
 export class SetWorkspaceMiddleware implements NestMiddleware {

@@ -30,8 +30,10 @@ export type ICoreCommerceClientMap<T> = {
 };
 
 // 🔹 A workspace may have multiple provider/client entries by client type
-export type ICoreCommerceWorkspaceValue = ICoreCommerceClientMap<ICoreCommerceProviderConfig>;
-export type ICoreCommerceWorkspaceClient = ICoreCommerceClientMap<ICoreCommerceClientWrapper>;
+export type ICoreCommerceWorkspaceValue =
+  ICoreCommerceClientMap<ICoreCommerceProviderConfig>;
+export type ICoreCommerceWorkspaceClient =
+  ICoreCommerceClientMap<ICoreCommerceClientWrapper>;
 
 // 🔹 Map of workspaces to value
 export type ICoreCommerceWorkspaceMap<T> = {
@@ -39,5 +41,7 @@ export type ICoreCommerceWorkspaceMap<T> = {
 };
 
 // 🔹 Final types
-export type ICoreCommerceDetails = ICoreCommerceWorkspaceMap<ICoreCommerceWorkspaceValue>;
-export type ICoreCommerceClientInstance = ICoreCommerceWorkspaceMap<ICoreCommerceWorkspaceClient>;
+export type ICoreCommerceDetails =
+  ICoreCommerceWorkspaceMap<ICoreCommerceWorkspaceValue>;
+export type ICoreCommerceClientInstance =
+  ICoreCommerceWorkspaceMap<ICoreCommerceWorkspaceClient>;

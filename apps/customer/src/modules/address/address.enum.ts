@@ -1,6 +1,7 @@
 export const ADDRESS_CUSTOM_FIELDS_TYPE_KEY = 'addressCustomFields';
 
-export const ADDRESS_CUSTOM_FIELDS_TYPE_ID = 'c7edb58d-8f6e-4636-987b-10e09f41ce51';
+export const ADDRESS_CUSTOM_FIELDS_TYPE_ID =
+  'c7edb58d-8f6e-4636-987b-10e09f41ce51';
 
 /**
  * Address Standard Fields

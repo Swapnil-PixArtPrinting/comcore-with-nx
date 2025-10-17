@@ -1,6 +1,6 @@
 import { HttpStatus, Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { JwtException, CustomJwtService } from '../../../../libs/common/src';
+import { JwtException, CustomJwtService } from '@comcore/ocs-lib-common';
 
 @Injectable()
 export class VerifyJwtMiddleware implements NestMiddleware {

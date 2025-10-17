@@ -1,4 +1,4 @@
-import { CreatedBy, LastModifiedBy } from "@commercetools/platform-sdk";
+import { CreatedBy, LastModifiedBy } from '@commercetools/platform-sdk';
 
 export interface BaseModel {
   id: string;

@@ -1,16 +1,12 @@
 import { Injectable, Scope } from '@nestjs/common';
-import {
-  CoreCommerceToolClient,
-} from './core-config.interface';
+import { CoreCommerceToolClient } from './core-config.interface';
 
-@Injectable({scope: Scope.REQUEST})
+@Injectable({ scope: Scope.REQUEST })
 export class CoreClientService {
   private coreCommerceClient: CoreCommerceToolClient;
   private dataCient: string;
 
-  constructor(
-  ) {
-  }
+  constructor() {}
 
   /**
    * Set the Core Commerce Config (once)

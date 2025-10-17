@@ -1,1 +1,1 @@
-export * from "./env-config.repo.impl";
+export * from './env-config.repo.impl';

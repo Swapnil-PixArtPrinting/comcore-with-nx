@@ -23,24 +23,24 @@ export class ExecutionProfiler {
 
   calculate(forceEndTime = false): Record<string, number> {
     let previous: number | null = null;
-  
+
     for (const [key, value] of Object.entries(this.intervals)) {
       if (previous !== null) {
         this.profile[key] = parseFloat(((value - previous) / 1000).toFixed(3));
       }
       previous = value;
     }
-  
+
     if (forceEndTime || !this.intervals['end']) {
       this.end();
     }
-  
+
     this.profile['total'] = parseFloat(
-      ((this.intervals['end'] - this.intervals['start']) / 1000).toFixed(3)
+      ((this.intervals['end'] - this.intervals['start']) / 1000).toFixed(3),
     );
-  
+
     return this.profile;
-  }  
+  }
 
   getIntervals(): Record<string, number> {
     return this.intervals;

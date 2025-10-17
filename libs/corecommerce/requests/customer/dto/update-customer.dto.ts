@@ -1,11 +1,11 @@
-import { CustomerUpdateAction } from "@commercetools/platform-sdk";
-import { IsArray, IsNumber, ValidateNested } from "class-validator";
+import { CustomerUpdateAction } from '@commercetools/platform-sdk';
+import { IsArray, IsNumber, ValidateNested } from 'class-validator';
 
 export class UpdateCustomerDto {
-    @IsNumber()
-    version: number;
+  @IsNumber()
+  version: number;
 
-    @IsArray()
-    @ValidateNested()
-    actions: CustomerUpdateAction[];
+  @IsArray()
+  @ValidateNested()
+  actions: CustomerUpdateAction[];
 }

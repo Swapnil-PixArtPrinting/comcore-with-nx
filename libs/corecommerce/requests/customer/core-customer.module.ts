@@ -2,27 +2,21 @@
 import { Module } from '@nestjs/common';
 import { CoreConfigModule } from '../../config';
 import {
-    COMMERCE_CUSTOMER_SERVICE,
-    CommerceCustomerRepositoryFactory,
-    CommerceCustomerServiceFactory,
-    CommerceCustomerServiceImpl,
+  COMMERCE_CUSTOMER_SERVICE,
+  CommerceCustomerRepositoryFactory,
+  CommerceCustomerServiceFactory,
+  CommerceCustomerServiceImpl,
 } from '..';
-import {
-    CommercetoolRepository
-} from './repositories/api/customer.commercetool.repo';
+import { CommercetoolRepository } from './repositories/api/customer.commercetool.repo';
 
 @Module({
-    imports: [
-        CoreConfigModule,
-    ],
-    providers: [
-        CommerceCustomerServiceFactory,
-        CommerceCustomerServiceImpl,
-        CommercetoolRepository,
-        CommerceCustomerRepositoryFactory,
-    ],
-    exports: [
-        CommerceCustomerServiceFactory,
-    ],
+  imports: [CoreConfigModule],
+  providers: [
+    CommerceCustomerServiceFactory,
+    CommerceCustomerServiceImpl,
+    CommercetoolRepository,
+    CommerceCustomerRepositoryFactory,
+  ],
+  exports: [CommerceCustomerServiceFactory],
 })
 export class CoreCustomerModule {}

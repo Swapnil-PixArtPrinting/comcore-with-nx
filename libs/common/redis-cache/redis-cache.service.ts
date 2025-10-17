@@ -7,7 +7,6 @@ import type { Cache } from 'cache-manager';
  */
 @Injectable()
 export class RedisCacheService {
-
   /**
    * @description Constructor
    * @param cacheManager
@@ -15,8 +14,7 @@ export class RedisCacheService {
   constructor(
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: Cache,
-  ) {
-  }
+  ) {}
 
   /**
    * @description Get value from cache

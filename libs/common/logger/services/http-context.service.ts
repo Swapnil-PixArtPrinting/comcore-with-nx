@@ -1,6 +1,6 @@
 import { Injectable, Scope, Inject } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
-import type ExtendedRequest from "../interfaces/extended-request.interface";
+import type ExtendedRequest from '../interfaces/extended-request.interface';
 
 @Injectable({ scope: Scope.REQUEST })
 export class HttpContextService {

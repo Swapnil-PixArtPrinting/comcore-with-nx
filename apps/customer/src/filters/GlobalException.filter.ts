@@ -1,6 +1,12 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, Logger } from '@nestjs/common';
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+  Logger,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
-import { LoggingService } from '../../../../libs/common/src';
+import { LoggingService } from '@comcore/ocs-lib-common';
 
 /**
  * Global exception filter that catches all exceptions and sends a generic response to the client.

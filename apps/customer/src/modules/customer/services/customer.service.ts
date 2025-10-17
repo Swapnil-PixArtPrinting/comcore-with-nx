@@ -38,7 +38,10 @@ import {
 import { CUSTOMER_REGISTRATION } from '../../utils/eventpublisher/constants/event.constants';
 import { ChannelReferenceModel } from '../../channel/models/channel.model';
 import { RenderableException } from '../../../exceptions/RenderableException.exception';
-import { CUSTOMER_ERROR_CASE, CUSTOMER_ERROR_CODE } from '../enums/errorCode.enum';
+import {
+  CUSTOMER_ERROR_CASE,
+  CUSTOMER_ERROR_CODE,
+} from '../enums/errorCode.enum';
 import { RegisterCustomerDto } from '../data/dto/register-customer.dto';
 import { ExternalAuthDto } from '../data/dto/external-auth.dto';
 import { CustomerGroupFacade } from '../../customer-group/services/customer-group.facade';
@@ -164,7 +167,11 @@ export class CustomerService {
     execute: boolean = true,
   ): Promise<CustomerModel> {
     // Check if the store is not already added to the customer
-    return await this.customerProviderRepository.repository.addStore(customer, store, execute);
+    return await this.customerProviderRepository.repository.addStore(
+      customer,
+      store,
+      execute,
+    );
   }
 
   /**
@@ -208,7 +215,8 @@ export class CustomerService {
     // Get actions to be performed
     const actions = [];
     // Get the registrations of the customer
-    const registrations = profile[CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM] ?? {};
+    const registrations =
+      profile[CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM] ?? {};
     // Add the stores to the customer those are not added
     for (const store of stores) {
       // Check if the store is not already added to the customer
@@ -220,7 +228,9 @@ export class CustomerService {
           store,
         );
         if (!customer?.custom?.fields?.[storeConfig?.flag]) {
-          actions.push(await this.setCustomField(customer, storeConfig?.flag, true, false));
+          actions.push(
+            await this.setCustomField(customer, storeConfig?.flag, true, false),
+          );
         }
       }
       // Add the store to the registrations details of the customer
@@ -249,7 +259,11 @@ export class CustomerService {
    * @param execute
    * @returns
    */
-  async changeCompanyName(customer: CustomerModel, companyName: string, execute: boolean = true) {
+  async changeCompanyName(
+    customer: CustomerModel,
+    companyName: string,
+    execute: boolean = true,
+  ) {
     // Check if the company name is different from the current company name
     if (companyName != customer?.companyName) {
       return await this.customerProviderRepository.repository.changeCompanyName(
@@ -268,10 +282,18 @@ export class CustomerService {
    * @param execute
    * @returns
    */
-  async changeVatId(customer: CustomerModel, vatId: string, execute: boolean = true) {
+  async changeVatId(
+    customer: CustomerModel,
+    vatId: string,
+    execute: boolean = true,
+  ) {
     // Check if the vat id is different from the current vat id
     if (vatId != customer?.vatId) {
-      return await this.customerProviderRepository.repository.changeVatId(customer, vatId, execute);
+      return await this.customerProviderRepository.repository.changeVatId(
+        customer,
+        vatId,
+        execute,
+      );
     }
     return { ...customer } as CustomerModel;
   }
@@ -288,7 +310,8 @@ export class CustomerService {
       this.profiler.mark('fetch-old-customer-start');
 
       // Fetch the customer by old email
-      let customer: CustomerModel | null = await this.customerFacade.fetchCustomerByEmail(oldEmail);
+      let customer: CustomerModel | null =
+        await this.customerFacade.fetchCustomerByEmail(oldEmail);
       this.profiler.mark('fetch-old-customer-end');
 
       // If the old email is the same as the new email, return the customer
@@ -311,7 +334,8 @@ export class CustomerService {
 
       // Check if the customer is available with new email
       this.profiler.mark('fetch-new-customer-start');
-      const existingCustomer = await this.customerFacade.fetchCustomerByEmail(newEmail);
+      const existingCustomer =
+        await this.customerFacade.fetchCustomerByEmail(newEmail);
       this.profiler.mark('fetch-new-customer-end');
 
       // If a customer with the new email already exists, throw an error
@@ -360,7 +384,11 @@ export class CustomerService {
       this.profiler.mark('updateCustomerEmailInCarts-start');
       try {
         // Update the customer email in all carts and orders
-        await this.orderServiceTools.updateCustomerEmail(customer, oldEmail, newEmail);
+        await this.orderServiceTools.updateCustomerEmail(
+          customer,
+          oldEmail,
+          newEmail,
+        );
       } catch (error) {
         this.loggingService.error(
           ['ProfileService'],
@@ -380,7 +408,9 @@ export class CustomerService {
         );
       }
       this.profiler.mark('updateCustomerEmailInCarts-end');
-      return await this.customerMapper.toArray(customer, [CUSTOMER_EXPANDABLES.EXPAND_DETAILED]);
+      return await this.customerMapper.toArray(customer, [
+        CUSTOMER_EXPANDABLES.EXPAND_DETAILED,
+      ]);
     } catch (error) {
       this.loggingService.error(
         ['ProfileService'],
@@ -429,11 +459,18 @@ export class CustomerService {
     isGuest: boolean = false,
   ): Promise<CustomerModel> {
     // Get the actions to be performed for store registration
-    const actions = await this.getStoreRegisterAction(customer, profile, newStores, isGuest);
+    const actions = await this.getStoreRegisterAction(
+      customer,
+      profile,
+      newStores,
+      isGuest,
+    );
 
     // Set the company name, vat id and metadata of the customer
     if (request?.companyName) {
-      actions.push(await this.changeCompanyName(customer, request?.companyName, false));
+      actions.push(
+        await this.changeCompanyName(customer, request?.companyName, false),
+      );
     }
     // Set the vat id of the customer
     if (request?.vatId) {
@@ -464,7 +501,10 @@ export class CustomerService {
    */
   async setPassword(email: string, password: string): Promise<CustomerModel> {
     // Set the password of the customer
-    return await this.customerProviderRepository.repository.setPassword(email, password);
+    return await this.customerProviderRepository.repository.setPassword(
+      email,
+      password,
+    );
   }
 
   /**
@@ -500,11 +540,16 @@ export class CustomerService {
     return !loginMedium || !passwordlessLoginMediums.includes(loginMedium);
   }
 
-  async updateLoginMedium(customer: CustomerModel, event: string): Promise<CustomerModel> {
+  async updateLoginMedium(
+    customer: CustomerModel,
+    event: string,
+  ): Promise<CustomerModel> {
     const fields = customer?.custom?.fields;
 
     if (fields && CUSTOMER_CUSTOM_FIELDS.CF_LOGINMEDIUM in fields) {
-      const currentLoginMedium = String(fields[CUSTOMER_CUSTOM_FIELDS.CF_LOGINMEDIUM]); // equivalent to getFieldAsString
+      const currentLoginMedium = String(
+        fields[CUSTOMER_CUSTOM_FIELDS.CF_LOGINMEDIUM],
+      ); // equivalent to getFieldAsString
 
       let newMedium: string | null = null;
 
@@ -553,7 +598,9 @@ export class CustomerService {
     profileRegistrationWithoutPassword: boolean,
   ) {
     // Get the stores to be added
-    const stores = request.stores?.length ? request.stores : [channel.custom.fields.storeKey];
+    const stores = request.stores?.length
+      ? request.stores
+      : [channel.custom.fields.storeKey];
 
     // Get the metadata fields
     const metadataFields = [
@@ -562,19 +609,24 @@ export class CustomerService {
     ];
 
     // Get the customer details with the metadata fields and registration details
-    const profileDetails = await this.customerMapper.getCustomerRelatedData(customer, [
-      CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM,
-      CUSTOMER_CUSTOM_FIELDS.CF_TENANT,
-      CUSTOMER_CUSTOM_FIELDS.CF_EXTERNAL_AUTH,
-      ...metadataFields,
-    ]);
+    const profileDetails = await this.customerMapper.getCustomerRelatedData(
+      customer,
+      [
+        CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM,
+        CUSTOMER_CUSTOM_FIELDS.CF_TENANT,
+        CUSTOMER_CUSTOM_FIELDS.CF_EXTERNAL_AUTH,
+        ...metadataFields,
+      ],
+    );
     // Get the stores that are not already added to the customer
     const newStores = stores.filter(
-      (store) => !profileDetails?.[CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM]?.[store],
+      (store) =>
+        !profileDetails?.[CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM]?.[store],
     );
     // Check if the customer is existing and the email is already registered
     let customerErrorCode = CUSTOMER_ERROR_CODE.PROFILE_REGISTRATION_FAILED;
-    let customerErrorType = CUSTOMER_ERROR_CASE.PROFILE_REGISTRATION_EXISTING_EMAIL;
+    let customerErrorType =
+      CUSTOMER_ERROR_CASE.PROFILE_REGISTRATION_EXISTING_EMAIL;
     if (newStores.length > 0) {
       customer = await this.addNewStoreRegistration(
         customer,
@@ -601,7 +653,10 @@ export class CustomerService {
         customer = await this.updateLoginMedium(customer, 'PASSWORD_SET');
       }
       // Publish the customer registration event if customer is not guest
-      if (!isGuest && profileDetails[CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM].length > 0) {
+      if (
+        !isGuest &&
+        profileDetails[CUSTOMER_CUSTOM_FIELDS.CF_REGISTERED_FROM].length > 0
+      ) {
         const customerArray = await this.customerMapper.toArray(customer, [
           CUSTOMER_EXPANDABLES.EXPAND_DETAILED,
         ]);
@@ -715,8 +770,12 @@ export class CustomerService {
       this.tenantConfigService,
       this.workspaceService,
     );
-    await this.customerNumberGeneratorService.initialize(channel.key, stores[0]);
-    customerDraft.customerNumber = await this.customerNumberGeneratorService.generate();
+    await this.customerNumberGeneratorService.initialize(
+      channel.key,
+      stores[0],
+    );
+    customerDraft.customerNumber =
+      await this.customerNumberGeneratorService.generate();
 
     const customerCustomFields = {};
 
@@ -724,7 +783,8 @@ export class CustomerService {
     channelReferenceModel.typeId = 'channel';
     channelReferenceModel.id = channel.id;
 
-    customerCustomFields[CUSTOMER_CUSTOM_FIELDS.CF_TENANT] = channelReferenceModel;
+    customerCustomFields[CUSTOMER_CUSTOM_FIELDS.CF_TENANT] =
+      channelReferenceModel;
 
     customerCustomFields[CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMER_ISACTIVE] = true;
 
@@ -743,15 +803,21 @@ export class CustomerService {
         referrer_url: customerData.externalAuth.referrerUrl,
         source_crm_agent: '',
       };
-      customerCustomFields[CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMER_ACQUISITION_CHANNEL] =
-        JSON.stringify(externalAuthFieldData);
-      customerCustomFields[CUSTOMER_CUSTOM_FIELDS.CF_LOGIN_MEDIUM] = LOGIN_MEDIUM.EXTERNAL;
+      customerCustomFields[
+        CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMER_ACQUISITION_CHANNEL
+      ] = JSON.stringify(externalAuthFieldData);
+      customerCustomFields[CUSTOMER_CUSTOM_FIELDS.CF_LOGIN_MEDIUM] =
+        LOGIN_MEDIUM.EXTERNAL;
       customerDraft.password = `${customerData.email}_${new Date().toISOString()}_${this.configService.get('SALT')}`;
     } else {
-      customerCustomFields[CUSTOMER_CUSTOM_FIELDS.CF_LOGIN_MEDIUM] = LOGIN_MEDIUM.PASSWORD;
+      customerCustomFields[CUSTOMER_CUSTOM_FIELDS.CF_LOGIN_MEDIUM] =
+        LOGIN_MEDIUM.PASSWORD;
     }
 
-    if (customerData.businessData && Object.keys(customerData.businessData).length > 0) {
+    if (
+      customerData.businessData &&
+      Object.keys(customerData.businessData).length > 0
+    ) {
       for (const [key, value] of Object.entries(customerData.businessData)) {
         if (await this.customerMapper.checkKeyAndCast(key, value)) {
           customerCustomFields[key] = value;
@@ -775,7 +841,9 @@ export class CustomerService {
    * @param customerDraft
    */
   async createCustomerFromDraft(customerDraft: CoreRegisterCustomerDTO) {
-    return await this.customerProviderRepository.repository.createCustomerFromDraft(customerDraft);
+    return await this.customerProviderRepository.repository.createCustomerFromDraft(
+      customerDraft,
+    );
   }
 
   /**
@@ -792,7 +860,8 @@ export class CustomerService {
         CUSTOMER_CUSTOM_FIELDS.CF_EXTERNAL_AUTH,
       )
     ) {
-      externalAuth = customer.custom.fields[CUSTOMER_CUSTOM_FIELDS.CF_EXTERNAL_AUTH];
+      externalAuth =
+        customer.custom.fields[CUSTOMER_CUSTOM_FIELDS.CF_EXTERNAL_AUTH];
     }
     return externalAuth;
   }
@@ -863,7 +932,9 @@ export class CustomerService {
         store,
       );
       if (!customer?.custom?.fields?.[storeConfig?.flag]) {
-        actions.push(await this.setCustomField(customer, storeConfig?.flag, true, false));
+        actions.push(
+          await this.setCustomField(customer, storeConfig?.flag, true, false),
+        );
       }
     }
     return await this.customerProviderRepository.repository.updateCustomerWithAllActions(
@@ -885,7 +956,11 @@ export class CustomerService {
    * @param customer
    */
   isActiveCustomer(customer: CustomerModel): boolean {
-    return customer?.custom?.fields?.[CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMER_ISACTIVE] === true;
+    return (
+      customer?.custom?.fields?.[
+        CUSTOMER_CUSTOM_FIELDS.CF_CUSTOMER_ISACTIVE
+      ] === true
+    );
   }
 
   /**
@@ -896,7 +971,11 @@ export class CustomerService {
    * @param execute
    */
   async setKey(customer: CustomerModel, key: string, execute: boolean = true) {
-    return await this.customerProviderRepository.repository.setKey(customer, key, execute);
+    return await this.customerProviderRepository.repository.setKey(
+      customer,
+      key,
+      execute,
+    );
   }
 
   getTenantId(customer: CustomerModel) {
@@ -920,7 +999,9 @@ export class CustomerService {
    * @param data
    * @returns
    */
-  async registerCustomer(data: RegisterCustomerDto): Promise<Partial<Customer>> {
+  async registerCustomer(
+    data: RegisterCustomerDto,
+  ): Promise<Partial<Customer>> {
     let guestCustomer = false;
     let profileRegistrationWithoutPassword = false;
     let tenantId = data.tenantId;
@@ -942,9 +1023,8 @@ export class CustomerService {
     if (customerData.externalAuth) {
       tenantId = customerData.externalAuth.tenantId ?? tenantId;
       guestCustomer = await this.isGuest(customerData.externalAuth);
-      profileRegistrationWithoutPassword = this.isProfileRegistrationWithoutPassword(
-        customerData.externalAuth,
-      );
+      profileRegistrationWithoutPassword =
+        this.isProfileRegistrationWithoutPassword(customerData.externalAuth);
       locale = customerData.externalAuth.locale ?? locale;
     }
 
@@ -966,7 +1046,9 @@ export class CustomerService {
     // Fetch data concurrently
     const results = await Promise.allSettled([
       this.customerFacade.fetchCustomerByEmail(customerData.email),
-      group ? this.customerGroupFacade.fetchGroupUsingKey(group) : Promise.resolve(null),
+      group
+        ? this.customerGroupFacade.fetchGroupUsingKey(group)
+        : Promise.resolve(null),
       this.channelFacade.fetchChannelByKey(tenantId),
     ]);
 
@@ -1071,7 +1153,8 @@ export class CustomerService {
     if (profileRegistrationWithoutPassword) {
       eventMetaData = {
         isPasswordSet: false,
-        isChildRegistration: customerData.immediateParentId && !addChildFailedException,
+        isChildRegistration:
+          customerData.immediateParentId && !addChildFailedException,
       };
     }
 

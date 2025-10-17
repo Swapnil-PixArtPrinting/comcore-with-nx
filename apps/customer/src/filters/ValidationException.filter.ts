@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { request, Response } from 'express';
 import { FailureResponse } from '../responses/failure.response';
-import { LoggingService } from '../../../../libs/common/src';
+import { LoggingService } from '@comcore/ocs-lib-common';
 
 /**
  * Filter that catches all exceptions that are instances of BadRequestException and sends a custom response to the client.
@@ -31,14 +31,19 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     let formattedErrors = {}; // Initialize the formatted errors object
 
     // Check if the exception response has a message and it is an array
-    if (exceptionResponse?.message && Array.isArray(exceptionResponse.message)) {
+    if (
+      exceptionResponse?.message &&
+      Array.isArray(exceptionResponse.message)
+    ) {
       // Check if errors are from class-validator
       if (
         exceptionResponse.message[0] &&
         typeof exceptionResponse.message[0] === 'object' &&
         exceptionResponse.message[0].property
       ) {
-        formattedErrors = this.formatValidationErrors(exceptionResponse.message);
+        formattedErrors = this.formatValidationErrors(
+          exceptionResponse.message,
+        );
       } else {
         // Fallback for string-based errors
         formattedErrors = exceptionResponse.message;
@@ -58,7 +63,12 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       errorMeta: errorMeta,
     };
 
-    this.loggingService.error(['Error'], 'Validation Exception', errorDetails, {});
+    this.loggingService.error(
+      ['Error'],
+      'Validation Exception',
+      errorDetails,
+      {},
+    );
 
     // Send the custom failure response
     return new FailureResponse(
@@ -71,7 +81,9 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     ).send(response);
   }
 
-  private formatValidationErrors(errors: ValidationError[]): Record<string, string[]> {
+  private formatValidationErrors(
+    errors: ValidationError[],
+  ): Record<string, string[]> {
     const formattedErrors: Record<string, string[]> = {};
 
     errors.forEach((error) => {
@@ -80,12 +92,17 @@ export class ValidationExceptionFilter implements ExceptionFilter {
       }
 
       if (error.constraints) {
-        formattedErrors[error.property].push(...Object.values(error.constraints));
+        formattedErrors[error.property].push(
+          ...Object.values(error.constraints),
+        );
       }
 
       // Handle nested validation errors (if any)
       if (error.children && error.children.length > 0) {
-        Object.assign(formattedErrors, this.formatValidationErrors(error.children));
+        Object.assign(
+          formattedErrors,
+          this.formatValidationErrors(error.children),
+        );
       }
     });
 

@@ -6,10 +6,8 @@ import { RequestContextService } from './request-context.service';
 
 @Global()
 @Module({
-  imports: [
-    forwardRef(() => ClientModule),
-  ],
+  imports: [forwardRef(() => ClientModule)],
   providers: [CoreConfigService, CoreClientService, RequestContextService],
-  exports: [CoreConfigService, CoreClientService, RequestContextService]
+  exports: [CoreConfigService, CoreClientService, RequestContextService],
 })
 export class CoreConfigModule {}

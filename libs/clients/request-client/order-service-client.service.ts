@@ -6,7 +6,7 @@ import {
   LoggingService,
   RedisCacheService,
   WorkspaceService,
-} from "../../../common/src";
+} from '../../../common/src';
 
 @Injectable({ scope: Scope.REQUEST })
 export class OrderServiceClient extends CimpressAuthClient {

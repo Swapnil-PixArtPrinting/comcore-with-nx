@@ -1,1 +1,1 @@
-export * from "./core-channel.model";
+export * from './core-channel.model';

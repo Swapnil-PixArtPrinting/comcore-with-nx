@@ -1,1 +1,1 @@
-export * from "./sns.config";
+export * from './sns.config';

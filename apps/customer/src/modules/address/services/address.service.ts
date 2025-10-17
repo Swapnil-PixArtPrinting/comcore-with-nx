@@ -19,7 +19,11 @@ export class AddressService {
     filter?: string[],
     includeInheritanceDetails?: boolean,
   ) {
-    return this.addressMapper.getAddressesArray(customer, filter, includeInheritanceDetails);
+    return this.addressMapper.getAddressesArray(
+      customer,
+      filter,
+      includeInheritanceDetails,
+    );
   }
 
   /**
@@ -45,7 +49,10 @@ export class AddressService {
    * @param address
    * @param formCustomFields
    */
-  convertAddressToArray(address: AddressModel, formCustomFields: boolean = false) {
+  convertAddressToArray(
+    address: AddressModel,
+    formCustomFields: boolean = false,
+  ) {
     return this.addressMapper.toArray(address, formCustomFields);
   }
 
@@ -86,7 +93,10 @@ export class AddressService {
    * @param customer
    * @param filter
    */
-  async getAddressesWithInheritance(customer: CustomerModel, filter: string[] = []) {
+  async getAddressesWithInheritance(
+    customer: CustomerModel,
+    filter: string[] = [],
+  ) {
     return this.addressMapper.getAddressesWithInheritance(customer, filter);
   }
 }

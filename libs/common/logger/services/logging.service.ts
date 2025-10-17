@@ -1,6 +1,6 @@
 import { Injectable, Scope } from '@nestjs/common';
 import * as winston from 'winston';
-import { HttpContextService } from "./http-context.service";
+import { HttpContextService } from './http-context.service';
 import { RedactorService } from './redactor.service';
 import ExtendedRequest from '../interfaces/extended-request.interface';
 import { LogLevel } from '../enums/log-level.enum';
@@ -17,26 +17,28 @@ export class LoggingService {
   constructor(
     private readonly httpContextProvider: HttpContextService,
     private readonly redactorService: RedactorService,
-    private readonly loggerConfigService: LoggerConfigService
+    private readonly loggerConfigService: LoggerConfigService,
   ) {
     const isLocal = this.loggerConfigService.getAppEnvironment() === 'local';
     const logLevel = isLocal ? 'debug' : 'info';
 
-    const orderedJsonFormat = winston.format.printf(({ message, context, level, tags, timestamp, trace }) => {
-      const orderedLogData: Record<string, any> = {
-        message,
-        context,
-        level,
-        tags,
-        timestamp
-      };
+    const orderedJsonFormat = winston.format.printf(
+      ({ message, context, level, tags, timestamp, trace }) => {
+        const orderedLogData: Record<string, any> = {
+          message,
+          context,
+          level,
+          tags,
+          timestamp,
+        };
 
-      if (trace) {
-        orderedLogData.trace = trace;
-      }
+        if (trace) {
+          orderedLogData.trace = trace;
+        }
 
-      return JSON.stringify(orderedLogData);
-    });
+        return JSON.stringify(orderedLogData);
+      },
+    );
 
     const transports: winston.transport[] = [];
 
@@ -46,7 +48,7 @@ export class LoggingService {
           filename: this.loggerConfigService.getLogToFile(),
           format: winston.format.combine(
             winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-            orderedJsonFormat
+            orderedJsonFormat,
           ),
         }),
       );
@@ -55,7 +57,7 @@ export class LoggingService {
         new winston.transports.Console({
           format: winston.format.combine(
             winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-            orderedJsonFormat
+            orderedJsonFormat,
           ),
         }),
       );
@@ -82,17 +84,17 @@ export class LoggingService {
       user_agent: request?.headers?.['user-agent'] ?? null,
       workspace: Array.isArray(request?.headers?.['workspace'])
         ? request?.headers?.['workspace'][0]
-        : request?.headers?.['workspace'] ?? "pixart",
+        : (request?.headers?.['workspace'] ?? 'pixart'),
       workspaceEnv: this.loggerConfigService.getAppEnvironment(),
       store: Array.isArray(request?.headers?.['store'])
         ? request?.headers?.['store'][0]
-        : request?.headers?.['store'] ?? null,
+        : (request?.headers?.['store'] ?? null),
       channel: Array.isArray(request?.headers?.['channel'])
         ? request?.headers?.['channel'][0]
-        : request?.headers?.['channel'] ?? null,
+        : (request?.headers?.['channel'] ?? null),
       jwtEmail: Array.isArray(request?.headers?.['emailOfRequestBy'])
         ? request?.headers?.['emailOfRequestBy'][0]
-        : request?.headers?.['emailOfRequestBy'] ?? null
+        : (request?.headers?.['emailOfRequestBy'] ?? null),
     };
   }
 
@@ -112,8 +114,13 @@ export class LoggingService {
     ]);
   }
 
-
-  private log(level: string, tags: any, message: any, details: any, trace?: any) {
+  private log(
+    level: string,
+    tags: any,
+    message: any,
+    details: any,
+    trace?: any,
+  ) {
     const context = this.getLogEntry();
     const logContext: LogContext = {
       ...context,
@@ -135,13 +142,18 @@ export class LoggingService {
       level: logData.level,
       tags: logData.tags,
       timestamp: logData.timestamp,
-      ...(logData.trace && { trace: logData.trace })
+      ...(logData.trace && { trace: logData.trace }),
     };
 
     this.logger.log(level, orderedLogData);
   }
 
-  error(tags: string[], message: string, details: Record<string, any>, trace: Record<string, any>) {
+  error(
+    tags: string[],
+    message: string,
+    details: Record<string, any>,
+    trace: Record<string, any>,
+  ) {
     this.log(LogLevel.ERROR, tags, message, details, trace);
   }
 

@@ -16,7 +16,11 @@ import {
   ITenantConfigService,
   WorkspaceService,
 } from '@comcore/ocs-lib-common';
-import { CoreConfigService, CoreClientService, dataClient } from '@comcore/ocs-lib-corecommerce';
+import {
+  CoreConfigService,
+  CoreClientService,
+  dataClient,
+} from '@comcore/ocs-lib-corecommerce';
 import { ApiType } from '../../shared/enums/api-type.enum';
 import { API_V2_BASE_PATH } from '../../shared/constants/api.constants';
 import { ChangeEmailDto } from './data/dto/change-email.dto';
@@ -64,10 +68,11 @@ export class CustomerController {
       this.workspaceService.getWorkspace(),
       'dataClient',
     );
-    const coreCommerceClient = await this.coreConfigService.getCoreCommerceClientInstance(
-      this.workspaceService.getWorkspace(),
-      dataClientType,
-    );
+    const coreCommerceClient =
+      await this.coreConfigService.getCoreCommerceClientInstance(
+        this.workspaceService.getWorkspace(),
+        dataClientType,
+      );
 
     this.coreClientService.setClient(coreCommerceClient['client']);
     this.coreClientService.setDataClient(ctool);
@@ -81,7 +86,11 @@ export class CustomerController {
   @ApiHeader({ name: 'workspace', description: 'Workspace Identifier' })
   @ApiBearerAuth()
   async registerCustomer(@Body() data: RegisterCustomerDto) {
-    this.loggingService.info(['Customer'], 'CustomerController@registerCustomer', data);
+    this.loggingService.info(
+      ['Customer'],
+      'CustomerController@registerCustomer',
+      data,
+    );
     await this.setContext();
     return await this.customerService.registerCustomer(data);
   }
@@ -94,7 +103,11 @@ export class CustomerController {
   @ApiHeader({ name: 'workspace', description: 'Workspace Identifier' })
   @ApiBearerAuth()
   async changeEmail(@Body() data: ChangeEmailDto) {
-    this.loggingService.info(['Customer'], 'CustomerController@changeEmail', data);
+    this.loggingService.info(
+      ['Customer'],
+      'CustomerController@changeEmail',
+      data,
+    );
     await this.setContext();
     return await this.customerService.changeEmail(data.oldEmail, data.newEmail);
   }
@@ -102,8 +115,13 @@ export class CustomerController {
   @Get(':id')
   @ApiHeader({ name: 'workspace', description: 'Workspace Identifier' })
   @ApiBearerAuth()
-  async getCustomer(@Param('id') id: string, @Query('noCache') noCache?: boolean) {
-    this.loggingService.info(['Customer'], 'CustomerController@getCustomer', { id }); // Log the request
+  async getCustomer(
+    @Param('id') id: string,
+    @Query('noCache') noCache?: boolean,
+  ) {
+    this.loggingService.info(['Customer'], 'CustomerController@getCustomer', {
+      id,
+    }); // Log the request
     await this.setContext();
     return await this.customerService.getCustomerById(id, noCache);
   }

@@ -1,5 +1,9 @@
 import { INestApplication, Injectable } from '@nestjs/common';
-import { DocumentBuilder, SwaggerCustomOptions, SwaggerModule } from '@nestjs/swagger';
+import {
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerModule,
+} from '@nestjs/swagger';
 import { CustomerModule } from '../../customer/customer.module';
 
 @Injectable()
@@ -18,11 +22,12 @@ export class SwaggerService {
 
     // CORRECT: Override Express's conditional GET behavior
     app.use((req, res, next) => {
-      if (req.path.includes('swagger') ||
+      if (
+        req.path.includes('swagger') ||
         req.path.includes('docs-json') ||
         req.path.includes('docs-yaml') ||
-        req.path.includes('api/documentation')) {
-
+        req.path.includes('api/documentation')
+      ) {
         // Override the res.send method to force fresh responses
         const originalSend = res.send;
         res.send = function (data) {
@@ -46,7 +51,8 @@ export class SwaggerService {
       yamlDocumentUrl: '/v2/swagger/docs-yaml', // Remove version from here
       swaggerUrl: '/v2/swagger/docs-json', // Remove version from here
       customSiteTitle: 'Customer Service API Docs',
-      customCssUrl: 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest/swagger-ui.css', // Remove version
+      customCssUrl:
+        'https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest/swagger-ui.css', // Remove version
       customJs: [
         'https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest/swagger-ui-bundle.js', // Remove version
         'https://cdn.jsdelivr.net/npm/swagger-ui-dist@latest/swagger-ui-standalone-preset.js', // Remove version

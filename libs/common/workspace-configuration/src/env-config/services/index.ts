@@ -1,2 +1,2 @@
-export * from "./env-config.service.interface";
-export * from "./implementations";
+export * from './env-config.service.interface';
+export * from './implementations';

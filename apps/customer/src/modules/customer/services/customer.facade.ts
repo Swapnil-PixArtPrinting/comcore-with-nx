@@ -40,7 +40,10 @@ export class CustomerFacade {
       return customer;
     }
 
-    customer = await this.customerProviderRepository.repository.fetchCustomerByEmail(email);
+    customer =
+      await this.customerProviderRepository.repository.fetchCustomerByEmail(
+        email,
+      );
     if (customer) {
       await this.putCustomerInCacheByEmail(email, customer);
       await this.putCustomerInCacheById(customer.id, customer);
@@ -58,7 +61,8 @@ export class CustomerFacade {
       return customer;
     }
 
-    customer = await this.customerProviderRepository.repository.fetchCustomerById(id);
+    customer =
+      await this.customerProviderRepository.repository.fetchCustomerById(id);
     await this.putCustomerInCacheById(id, customer);
     await this.putCustomerInCacheByEmail(customer.email, customer);
     return customer;

@@ -10,7 +10,7 @@ export class RequestContextService {
   getHeaders(): Record<string, string> {
     const result: Record<string, string> = {};
 
-    if(this.request.headers) {
+    if (this.request.headers) {
       for (const key in allowedHeaders) {
         const headerValue = this.request.headers[key];
         if (headerValue) {
