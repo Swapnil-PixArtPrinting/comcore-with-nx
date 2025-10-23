@@ -4,7 +4,6 @@
     "moduleResolution": "nodenext",
     "resolvePackageJsonExports": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -16,25 +15,23 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": true,
+    "strictNullChecks": false,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/aws": [
-        "libs/aws/src"
+      "@app/awskit": [
+        "libs/awskit/src"
       ],
-      "@app/aws/*": [
-        "libs/aws/src/*"
+      "@app/awskit/*": [
+        "libs/awskit/src/*"
       ],
-      "@app/clients": [
-        "libs/clients/src",
-        "libs/clients/src"
+      "@app/clientskit": [
+        "libs/clientskit/src"
       ],
-      "@app/clients/*": [
-        "libs/clients/src/*",
-        "libs/clients/src/*"
+      "@app/clientskit/*": [
+        "libs/clientskit/src/*"
       ],
       "@app/common": [
         "libs/common/src"
@@ -47,12 +44,6 @@
       ],
       "@app/corecommerce/*": [
         "libs/corecommerce/src/*"
-      ],
-      "@app/sample": [
-        "libs/sample/src"
-      ],
-      "@app/sample/*": [
-        "libs/sample/src/*"
       ]
     }
   }

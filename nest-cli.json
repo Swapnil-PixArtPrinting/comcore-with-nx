@@ -1,40 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "apps/comcore3/src",
+  "sourceRoot": "apps/comcore4/src",
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true,
-    "tsConfigPath": "apps/comcore3/tsconfig.app.json"
+    "tsConfigPath": "apps/comcore4/tsconfig.app.json"
   },
   "monorepo": true,
-  "root": "apps/comcore3",
+  "root": "apps/comcore4",
   "projects": {
-    "aws": {
+    "awskit": {
       "type": "library",
-      "root": "libs/aws",
+      "root": "libs/awskit",
       "entryFile": "index",
-      "sourceRoot": "libs/aws/src",
+      "sourceRoot": "libs/awskit/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/aws/tsconfig.lib.json"
+        "tsConfigPath": "libs/awskit/tsconfig.lib.json"
       }
     },
-    "clients": {
+    "clientskit": {
       "type": "library",
-      "root": "libs/clients",
+      "root": "libs/clientskit",
       "entryFile": "index",
-      "sourceRoot": "libs/clients/src",
+      "sourceRoot": "libs/clientskit/src",
       "compilerOptions": {
-        "tsConfigPath": "libs/clients/tsconfig.lib.json"
-      }
-    },
-    "comcore3": {
-      "type": "application",
-      "root": "apps/comcore3",
-      "entryFile": "main",
-      "sourceRoot": "apps/comcore3/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/comcore3/tsconfig.app.json"
+        "tsConfigPath": "libs/clientskit/tsconfig.lib.json"
       }
     },
     "common": {
@@ -71,15 +62,6 @@
       "sourceRoot": "apps/order-service/src",
       "compilerOptions": {
         "tsConfigPath": "apps/order-service/tsconfig.app.json"
-      }
-    },
-    "sample": {
-      "type": "library",
-      "root": "libs/sample",
-      "entryFile": "index",
-      "sourceRoot": "libs/sample/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/sample/tsconfig.lib.json"
       }
     }
   }
