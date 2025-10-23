@@ -1,15 +1,12 @@
 import { NestFactory } from '@nestjs/core';
-import { CustomerServiceModule } from './customer-service.module';
+import { AppModule } from './app.module';
 import session from 'express-session';
 import passport from 'passport';
 import { ConfigService } from '@nestjs/config';
 import { RedisConfig } from './redis.config';
 import { RedisStore } from 'connect-redis';
 import { createClient } from 'redis';
-import { ExpressAdapter } from '@bull-board/express';
-import { createBullBoard } from '@bull-board/api';
-import { BullMQAdapter } from '@bull-board/api/bullMQAdapter';
-import { Queue } from 'bullmq';
+
 import * as fs from 'node:fs';
 import * as dotenv from 'dotenv';
 
@@ -30,8 +27,9 @@ import {
   ExecutionContext,
   ValidationPipe,
 } from '@nestjs/common';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
-async function loadEnv() {
+function loadEnv() {
   const envPath = '.env';
   if (fs.existsSync(envPath)) {
     const envConfig = dotenv.parse(fs.readFileSync(envPath));
@@ -48,8 +46,8 @@ async function waitForEnvVariables(
 ) {
   const start = Date.now();
   return new Promise<void>((resolve, reject) => {
-    const timer = setInterval(async () => {
-      await loadEnv();
+    const timer = setInterval(() => {
+      loadEnv();
       const missing = keys.filter((key) => !process.env[key]);
       if (missing.length === 0) {
         clearInterval(timer);
@@ -87,23 +85,9 @@ async function setupSession(app, configService: ConfigService) {
   app.use(passport.session());
 }
 
-async function setupBullBoard(configService: ConfigService, app) {
-  const serverAdapter = new ExpressAdapter();
-  serverAdapter.setBasePath('/admin/queues');
+// Bull Board is now handled by jobs-service
 
-  const customerQueue = new Queue('customer-queue', {
-    connection: RedisConfig.getOptions(configService),
-  });
-
-  createBullBoard({
-    queues: [new BullMQAdapter(customerQueue)],
-    serverAdapter,
-  });
-
-  app.use('/admin/queues', serverAdapter.getRouter());
-}
-
-async function setupSwagger(app, loggingService: LoggingService) {
+async function setupSwagger(app) {
   const swaggerService = app.get(SwaggerService);
 
   app.use('/api/documentation', (req, res, next) => {
@@ -121,9 +105,9 @@ async function setupSwagger(app, loggingService: LoggingService) {
 }
 
 async function bootstrap() {
-  await loadEnv();
+  loadEnv();
 
-  const app = await NestFactory.create(CustomerServiceModule);
+  const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const loggingService = await app.resolve(LoggingService);
 
@@ -181,11 +165,27 @@ async function bootstrap() {
   auth0Strategy.initialize();
 
   await setupSession(app, configService);
-  await setupBullBoard(configService, app);
-  await setupSwagger(app, loggingService);
+  // Bull Board is now handled by jobs-service
+  await setupSwagger(app);
+
+  // Setup gRPC microservice
+  const grpcApp = await NestFactory.createMicroservice<MicroserviceOptions>(
+    AppModule,
+    {
+      transport: Transport.GRPC,
+      options: {
+        package: 'customer',
+        protoPath: '/app/proto/customer-job.proto',
+        url: '0.0.0.0:50051',
+      },
+    },
+  );
+
+  await grpcApp.listen();
+  console.log('gRPC microservice is listening on port 50051');
 
   await app.listen(process.env.PORT ?? 9002);
   console.log('Server started successfully!');
 }
 
-bootstrap();
+void bootstrap();

@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package customer;
+
+service CustomerJobService {
+  rpc ProcessRegistrationPCA (RegistrationPCARequest) returns (RegistrationPCAResponse);
+  rpc ProcessRegistrationEvent (RegistrationEventRequest) returns (RegistrationEventResponse);
+  rpc ProcessEmailUpdatedEvent (EmailUpdatedEventRequest) returns (EmailUpdatedEventResponse);
+}
+
+message RegistrationPCARequest {
+  string workspace = 1;
+  Customer customer = 2;
+  repeated string stores = 3;
+  CustomerData customerData = 4;
+}
+
+message RegistrationPCAResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message RegistrationEventRequest {
+  string workspace = 1;
+  Customer customer = 2;
+  Customer guestCustomer = 3;
+  string tenantId = 4;
+  string group = 5;
+  EventMetaData eventMetaData = 6;
+}
+
+message RegistrationEventResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message EmailUpdatedEventRequest {
+  string workspace = 1;
+  Customer customer = 2;
+  string oldEmail = 3;
+  string newEmail = 4;
+}
+
+message EmailUpdatedEventResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Customer {
+  string id = 1;
+  string email = 2;
+  string firstName = 3;
+  string lastName = 4;
+  // Add other customer fields as needed
+}
+
+message CustomerData {
+  string email = 1;
+  string firstName = 2;
+  string lastName = 3;
+  // Add other registration fields as needed
+}
+
+message EventMetaData {
+  string source = 1;
+  string timestamp = 2;
+  // Add other metadata fields as needed
+}

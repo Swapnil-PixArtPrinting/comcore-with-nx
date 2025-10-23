@@ -29,7 +29,6 @@ import { CUSTOMER_FACADE, CustomerFacade } from './services/customer.facade';
 import { CustomerGroupFacade } from '../customer-group/services/customer-group.facade';
 import { ChannelFacade } from '../channel/channel.facade';
 import { BullModule } from '@nestjs/bullmq';
-import { CustomerProcessor } from './queues/customer.processor';
 import { CustomerGroupGraphqlRepository } from '../customer-group/repositories/request/customer-group.graphql.repo';
 import { CustomerGroupRestRepository } from '../customer-group/repositories/request/customer-group.rest.repo';
 import { ChannelGraphqlRepository } from '../channel/repositories/request/channel.graphql.repo';
@@ -44,6 +43,7 @@ import {
 } from './services/mappers/customer.mapper';
 import { AddressModule } from '../address/address.module';
 import { HttpModule } from '@nestjs/axios';
+import { CustomerJobGrpcService } from '../../grpc/customer-job-grpc.service';
 
 /**
  * @description Module for Profile
@@ -79,12 +79,12 @@ import { HttpModule } from '@nestjs/axios';
     ChannelGraphqlRepository,
     ChannelRestRepository,
     RedisCacheService,
-    CustomerProcessor,
     CustomerGroupGraphqlRepository,
     CustomerGroupRestRepository,
     MlamService,
     CustomerGroupFacade,
     ChannelFacade,
+    CustomerJobGrpcService,
     {
       useClass: TenantConfigServiceImpl,
       provide: TENANT_CONFIG_SERVICE,

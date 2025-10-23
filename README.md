@@ -5,7 +5,7 @@
 ### Endpoints should look like:
   https://commerce-core.pixartprinting.net/customer/api/v2/
   https://commerce-core.pixartprinting.net/order/api/v3/
-  https://commerce-core.pixartprinting.net/cart/api/v3/
+  https://commerce-core.pixartprinting.net/cart/api/v2/
 
 ### Architecture:
   Monorepo structure using Nx for managing multiple applications and libraries.

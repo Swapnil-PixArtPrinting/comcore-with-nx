@@ -5,10 +5,10 @@ services:
     build:
       context: .
       dockerfile: docker/customer-service/Dockerfile
-    image: comcore4/customer-service:dev
-    container_name: comcore4_customer_service
+    container_name: customer
     ports:
-      - '9002:9002' # optional; internal services are reachable by nginx via service name
+      - '9002:9002' # HTTP API
+      - '50051:50051' # gRPC
     networks:
       - comcore_net
 
@@ -16,10 +16,22 @@ services:
     build:
       context: .
       dockerfile: docker/order-service/Dockerfile
-    image: comcore4/order-service:dev
-    container_name: comcore4_order_service
+    container_name: order
     ports:
       - '9001:9001'
+    networks:
+      - comcore_net
+
+  jobs-service:
+    build:
+      context: .
+      dockerfile: docker/jobs-service/Dockerfile
+    container_name: jobs
+    ports:
+      - '9003:9003'
+    depends_on:
+      - redis
+      - customer-service
     networks:
       - comcore_net
 
@@ -27,13 +39,13 @@ services:
     build:
       context: .
       dockerfile: docker/web/Dockerfile
-    image: comcore4/web:dev
-    container_name: comcore4_web
+    container_name: web
     ports:
-      - '8080:80' # expose nginx on host: http://localhost:8080
+      - '3000:80' # expose nginx on host: http://localhost:3000
     depends_on:
       - customer-service
       - order-service
+      - redis
     networks:
       - comcore_net
     restart: always
@@ -41,8 +53,9 @@ services:
   ### Redis Container ###
   redis:
     build:
-      context: ./
-      dockerfile: ./docker/redis/Dockerfile
+      context: .
+      dockerfile: docker/redis/Dockerfile
+    container_name: redis
     volumes:
       - ./local_data_saved/redis:/data
     ports:

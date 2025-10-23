@@ -9,6 +9,7 @@
     # Copy only the app and libs we need
     COPY apps/customer-service ./apps/customer-service
     COPY libs ./libs
+    COPY proto ./proto
     
     # Install dependencies
     RUN npm install
@@ -30,7 +31,11 @@
     # Copy build output for customer-service
     COPY --from=builder /app/dist/apps/customer-service ./dist
     
+    # Copy proto files
+    COPY --from=builder /app/proto ./proto
+    
     EXPOSE 9002
+    EXPOSE 50051
     
     CMD ["node", "dist/main.js"]
     

@@ -10,8 +10,6 @@ import {
   RequestsModule,
 } from '@app/corecommerce';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { CustomerServiceController } from './customer-service.controller';
-import { CustomerServiceService } from './customer-service.service';
 import { EventPublisherModule } from './modules/utils/eventpublisher/eventpublisher.module';
 import { AwskitModule, SecretsManagerModule } from '@app/awskit';
 import { SnsModule } from '@app/awskit';
@@ -76,7 +74,7 @@ import { ApiTypeService } from './apiType/api.type';
       isGlobal: true,
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         store: redisStore,
         ...RedisConfig.getOptions(configService),
       }),
@@ -94,16 +92,9 @@ import { ApiTypeService } from './apiType/api.type';
     DatabaseModule,
     CustomJwtModule,
   ],
-  controllers: [CustomerServiceController],
-  providers: [
-    CustomerServiceService,
-    EnvSetupCommand,
-    SwaggerService,
-    ApiTypeService,
-  ],
-  exports: [CustomerServiceService],
+  providers: [EnvSetupCommand, SwaggerService, ApiTypeService],
 })
-export class CustomerServiceModule {
+export class AppModule {
   // Middleware configuration for incoming requests
   configure(consumer: MiddlewareConsumer) {
     consumer

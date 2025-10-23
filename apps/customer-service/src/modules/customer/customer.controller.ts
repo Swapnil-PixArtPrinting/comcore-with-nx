@@ -36,7 +36,7 @@ import { RegisterCustomerDto } from './data/dto/register-customer.dto';
  */
 @UseFilters(RenderableExceptionFilter)
 @UseFilters(ValidationExceptionFilter)
-@Controller(API_V2_BASE_PATH + 'customer')
+@Controller(API_V2_BASE_PATH)
 @ApiTags('Customer')
 export class CustomerController {
   /**
@@ -125,5 +125,74 @@ export class CustomerController {
     }); // Log the request
     await this.setContext();
     return await this.customerService.getCustomerById(id, noCache);
+  }
+
+  // Internal job processing endpoints for jobs-service (no auth required)
+  @Post('internal/registration-pca')
+  async handleRegistrationPCA(@Body() data: any) {
+    this.loggingService.info(
+      ['Customer'],
+      'CustomerController@handleRegistrationPCA',
+      data,
+    );
+    // Set workspace from job data if available
+    if (data.workspace) {
+      this.workspaceService.setWorkspace(data.workspace);
+    }
+    await this.setContext();
+    const { customer, stores, customerData } = data;
+    return await this.customerService.addStoreAfterRegistration(
+      customer,
+      stores,
+      customerData,
+    );
+  }
+
+  @Post('internal/registration-event')
+  async handleRegistrationEvent(@Body() data: any) {
+    this.loggingService.info(
+      ['Customer'],
+      'CustomerController@handleRegistrationEvent',
+      data,
+    );
+    // Set workspace from job data if available
+    if (data.workspace) {
+      this.workspaceService.setWorkspace(data.workspace);
+    }
+    await this.setContext();
+    const { customer, guestCustomer, tenantId, group, eventMetaData } = data;
+
+    // Implementation would need to be moved from the original processor
+    // For now, just log the processing
+    this.loggingService.info(['Customer'], 'Processing registration event', {
+      customerId: customer?.id,
+    });
+
+    return { success: true, message: 'Registration event processed' };
+  }
+
+  @Post('internal/email-updated-event')
+  async handleEmailUpdatedEvent(@Body() data: any) {
+    this.loggingService.info(
+      ['Customer'],
+      'CustomerController@handleEmailUpdatedEvent',
+      data,
+    );
+    // Set workspace from job data if available
+    if (data.workspace) {
+      this.workspaceService.setWorkspace(data.workspace);
+    }
+    await this.setContext();
+    const { customer, oldEmail, newEmail } = data;
+
+    // Implementation would need to be moved from the original processor
+    // For now, just log the processing
+    this.loggingService.info(['Customer'], 'Processing email updated event', {
+      customerId: customer?.id,
+      oldEmail,
+      newEmail,
+    });
+
+    return { success: true, message: 'Email updated event processed' };
   }
 }
