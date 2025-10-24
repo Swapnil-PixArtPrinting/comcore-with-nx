@@ -22,10 +22,10 @@ services:
     networks:
       - comcore_net
 
-  jobs-service:
+  jobs:
     build:
       context: .
-      dockerfile: docker/jobs-service/Dockerfile
+      dockerfile: docker/jobs/Dockerfile
     container_name: jobs
     ports:
       - '3003:3003'

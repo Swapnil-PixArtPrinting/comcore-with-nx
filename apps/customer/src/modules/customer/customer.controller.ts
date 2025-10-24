@@ -127,7 +127,7 @@ export class CustomerController {
     return await this.customerService.getCustomerById(id, noCache);
   }
 
-  // Internal job processing endpoints for jobs-service (no auth required)
+  // Internal job processing endpoints for jobs (no auth required)
   @Post('internal/registration-pca')
   async handleRegistrationPCA(@Body() data: any) {
     this.loggingService.info(

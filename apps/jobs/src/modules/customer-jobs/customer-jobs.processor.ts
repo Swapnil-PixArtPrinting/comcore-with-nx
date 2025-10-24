@@ -42,7 +42,7 @@ export class CustomerJobsProcessor extends WorkerHostProcessor {
   };
 
   async process(job: Job): Promise<void> {
-    this.loggingService.info(['Jobs-Service'], `Processing job: ${job.name}`, {
+    this.loggingService.info(['jobs'], `Processing job: ${job.name}`, {
       jobId: job.id,
       jobName: job.name,
     });
@@ -52,7 +52,7 @@ export class CustomerJobsProcessor extends WorkerHostProcessor {
       return handler.call(this, job);
     } else {
       this.loggingService.error(
-        ['Jobs-Service'],
+        ['jobs'],
         `No handler found for job: ${job.name}`,
         { jobName: job.name },
         null,
@@ -61,11 +61,7 @@ export class CustomerJobsProcessor extends WorkerHostProcessor {
   }
 
   private async handleCustomerRegistrationPCA(job: Job): Promise<void> {
-    this.loggingService.info(
-      ['Jobs-Service'],
-      'Customer Registration PCA',
-      job.data,
-    );
+    this.loggingService.info(['jobs'], 'Customer Registration PCA', job.data);
 
     try {
       const { customer, stores, customerData, workspace } = job.data;
@@ -79,13 +75,13 @@ export class CustomerJobsProcessor extends WorkerHostProcessor {
       });
 
       this.loggingService.info(
-        ['Jobs-Service'],
+        ['jobs'],
         'Successfully processed customer registration PCA',
         { customerId: customer?.id },
       );
     } catch (error) {
       this.loggingService.error(
-        ['Jobs-Service'],
+        ['jobs'],
         'Failed to process customer registration PCA',
         { jobData: job.data },
         error,
@@ -96,7 +92,7 @@ export class CustomerJobsProcessor extends WorkerHostProcessor {
 
   private async handleCustomerRegistrationEvent(job: Job): Promise<void> {
     this.loggingService.info(
-      ['Jobs-Service'],
+      ['jobs'],
       'Customer Registration Event Publish',
       job.data,
     );
@@ -122,13 +118,13 @@ export class CustomerJobsProcessor extends WorkerHostProcessor {
       });
 
       this.loggingService.info(
-        ['Jobs-Service'],
+        ['jobs'],
         'Successfully processed customer registration event',
         { customerId: customer?.id },
       );
     } catch (error) {
       this.loggingService.error(
-        ['Jobs-Service'],
+        ['jobs'],
         'Failed to process customer registration event',
         { jobData: job.data },
         error,
@@ -139,7 +135,7 @@ export class CustomerJobsProcessor extends WorkerHostProcessor {
 
   private async handleCustomerEmailUpdated(job: Job): Promise<void> {
     this.loggingService.info(
-      ['Jobs-Service'],
+      ['jobs'],
       'Customer Email Updated Event Publish',
       job.data,
     );
@@ -156,13 +152,13 @@ export class CustomerJobsProcessor extends WorkerHostProcessor {
       });
 
       this.loggingService.info(
-        ['Jobs-Service'],
+        ['jobs'],
         'Successfully processed customer email updated event',
         { customerId: customer?.id },
       );
     } catch (error) {
       this.loggingService.error(
-        ['Jobs-Service'],
+        ['jobs'],
         'Failed to process customer email updated event',
         { jobData: job.data },
         error,

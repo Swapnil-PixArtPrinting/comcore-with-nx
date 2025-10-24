@@ -20,10 +20,10 @@
     "test:e2e": "jest --config ./apps/comcore4/test/jest-e2e.json",
     "build:order": "nest build order",
     "build:customer": "nest build customer",
-    "build:jobs-service": "nest build jobs-service",
+    "build:jobs": "nest build jobs",
     "start:order": "nest start order --watch",
     "start:customer": "nest start customer --watch",
-    "start:jobs-service": "nest start jobs-service --watch"
+    "start:jobs": "nest start jobs --watch"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.913.0",

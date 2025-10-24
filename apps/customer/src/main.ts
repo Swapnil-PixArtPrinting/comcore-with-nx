@@ -85,7 +85,7 @@ async function setupSession(app, configService: ConfigService) {
   app.use(passport.session());
 }
 
-// Bull Board is now handled by jobs-service
+// Bull Board is now handled by jobs
 
 async function setupSwagger(app) {
   const swaggerService = app.get(SwaggerService);
@@ -165,7 +165,7 @@ async function bootstrap() {
   auth0Strategy.initialize();
 
   await setupSession(app, configService);
-  // Bull Board is now handled by jobs-service
+  // Bull Board is now handled by jobs
   await setupSwagger(app);
 
   // Setup gRPC microservice
