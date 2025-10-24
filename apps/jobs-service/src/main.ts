@@ -16,7 +16,7 @@ async function bootstrap() {
   // Setup Bull Board for queue monitoring
   setupBullBoard(configService, app);
 
-  const port = process.env.JOBS_SERVICE_PORT || 9003;
+  const port = process.env.JOBS_SERVICE_PORT || 3003;
   await app.listen(port);
 
   logger.log(`Jobs Service is running on port ${port}`);

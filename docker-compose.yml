@@ -7,7 +7,7 @@ services:
       dockerfile: docker/customer-service/Dockerfile
     container_name: customer
     ports:
-      - '9002:9002' # HTTP API
+      - '3002:3002' # HTTP API
       - '50051:50051' # gRPC
     networks:
       - comcore_net
@@ -18,7 +18,7 @@ services:
       dockerfile: docker/order-service/Dockerfile
     container_name: order
     ports:
-      - '9001:9001'
+      - '3001:3001'
     networks:
       - comcore_net
 
@@ -28,7 +28,7 @@ services:
       dockerfile: docker/jobs-service/Dockerfile
     container_name: jobs
     ports:
-      - '9003:9003'
+      - '3003:3003'
     depends_on:
       - redis
       - customer-service

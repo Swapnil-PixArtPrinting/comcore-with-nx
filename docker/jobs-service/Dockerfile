@@ -34,6 +34,6 @@ COPY --from=builder /app/dist/apps/jobs-service ./dist
 # Copy proto files
 COPY --from=builder /app/proto ./proto
 
-EXPOSE 9003
+EXPOSE 3003
 
 CMD ["node", "dist/main.js"]

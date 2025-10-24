@@ -73,7 +73,7 @@ Successfully tested gRPC integration:
 
 1. ✅ **Services Started**: `docker-compose up customer-service jobs-service redis`
 2. ✅ **gRPC Server**: Confirmed "gRPC microservice is listening on port 50051"
-3. ✅ **Jobs Dashboard**: Bull Board accessible at `http://localhost:9003`
+3. ✅ **Jobs Dashboard**: Bull Board accessible at `http://localhost:3003`
 4. ✅ **Proto Files**: Fixed absolute path `/app/proto/customer-job.proto` in Docker containers
 
 ## Issue Resolution

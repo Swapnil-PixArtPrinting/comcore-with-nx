@@ -184,7 +184,7 @@ async function bootstrap() {
   await grpcApp.listen();
   console.log('gRPC microservice is listening on port 50051');
 
-  await app.listen(process.env.PORT ?? 9002);
+  await app.listen(process.env.PORT ?? 3002);
   console.log('Server started successfully!');
 }
 

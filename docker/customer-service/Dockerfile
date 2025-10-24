@@ -34,7 +34,7 @@
     # Copy proto files
     COPY --from=builder /app/proto ./proto
     
-    EXPOSE 9002
+    EXPOSE 3002
     EXPOSE 50051
     
     CMD ["node", "dist/main.js"]

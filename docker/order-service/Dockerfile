@@ -31,7 +31,7 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist/apps/order-service ./dist
 
 # Expose the port your app listens on
-EXPOSE 9001
+EXPOSE 3001
 
 # Start the app (assumes dist/main.js is the entry)
 CMD ["node", "dist/main.js"]
