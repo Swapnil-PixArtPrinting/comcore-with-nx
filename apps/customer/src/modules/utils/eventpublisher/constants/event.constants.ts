@@ -1,5 +1,5 @@
 export const VAL_CALLER = 'OrderServices';
-export const EVENT_SOURCE = 'customer-service';
+export const EVENT_SOURCE = 'customer';
 export const VAL_VERSION = 'v1';
 
 export const CUSTOMER_REGISTRATION = 'CustomerRegistration';

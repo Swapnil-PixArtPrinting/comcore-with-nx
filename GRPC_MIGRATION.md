@@ -1,7 +1,7 @@
 # gRPC Migration Summary
 
 ## Overview
-Successfully migrated inter-service communication from HTTP to gRPC between customer-service and jobs-service.
+Successfully migrated inter-service communication from HTTP to gRPC between customer and jobs-service.
 
 ## What was implemented
 
@@ -15,7 +15,7 @@ Successfully migrated inter-service communication from HTTP to gRPC between cust
   - `ProcessEmailUpdatedEvent`
 
 ### 2. Customer Service (gRPC Server)
-- **File**: `apps/customer-service/src/grpc/customer-job-grpc.service.ts`
+- **File**: `apps/customer/src/grpc/customer-job-grpc.service.ts`
 - **Implementation**: NestJS gRPC server using `@GrpcMethod` decorators
 - **Port**: 50051
 - **Setup**: Added to main.ts as microservice alongside HTTP server
@@ -24,10 +24,10 @@ Successfully migrated inter-service communication from HTTP to gRPC between cust
 - **File**: `apps/jobs-service/src/modules/customer-jobs/customer-jobs.processor.ts`
 - **Implementation**: gRPC client calls replacing HTTP requests
 - **Module**: `apps/jobs-service/src/modules/customer-jobs/customer-jobs.module.ts`
-- **Configuration**: ClientsModule with gRPC transport to `customer-service:50051`
+- **Configuration**: ClientsModule with gRPC transport to `customer:50051`
 
 ### 4. Docker Configuration
-- **customer-service/Dockerfile**: Exposes port 50051, includes proto files
+- **customer/Dockerfile**: Exposes port 50051, includes proto files
 - **jobs-service/Dockerfile**: Includes proto files for gRPC client
 - **docker-compose.yml**: Maps port 50051 for gRPC communication
 
@@ -62,16 +62,16 @@ Successfully migrated inter-service communication from HTTP to gRPC between cust
 ## Testing
 
 Both services build successfully:
-- ✅ `npm run build:customer-service` 
+- ✅ `npm run build:customer` 
 - ✅ `npm run build:jobs-service`
-- ✅ `docker-compose build customer-service`
+- ✅ `docker-compose build customer`
 - ✅ `docker-compose build jobs-service`
 
 ## Testing Results ✅
 
 Successfully tested gRPC integration:
 
-1. ✅ **Services Started**: `docker-compose up customer-service jobs-service redis`
+1. ✅ **Services Started**: `docker-compose up customer jobs-service redis`
 2. ✅ **gRPC Server**: Confirmed "gRPC microservice is listening on port 50051"
 3. ✅ **Jobs Dashboard**: Bull Board accessible at `http://localhost:3003`
 4. ✅ **Proto Files**: Fixed absolute path `/app/proto/customer-job.proto` in Docker containers
@@ -85,10 +85,10 @@ Successfully tested gRPC integration:
 
 - Modified: `apps/jobs-service/src/modules/customer-jobs/customer-jobs.processor.ts`
 - Modified: `apps/jobs-service/src/modules/customer-jobs/customer-jobs.module.ts`
-- Modified: `apps/customer-service/src/main.ts` 
-- Created: `apps/customer-service/src/grpc/customer-job-grpc.service.ts`
+- Modified: `apps/customer/src/main.ts` 
+- Created: `apps/customer/src/grpc/customer-job-grpc.service.ts`
 - Created: `proto/customer-job.proto`
-- Modified: `docker/customer-service/Dockerfile`
+- Modified: `docker/customer/Dockerfile`
 - Modified: `docker/jobs-service/Dockerfile`
 - Modified: `docker-compose.yml`
 - Modified: `package.json` (added gRPC dependencies)

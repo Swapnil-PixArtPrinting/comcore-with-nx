@@ -1,10 +1,10 @@
 version: '3.9'
 
 services:
-  customer-service:
+  customer:
     build:
       context: .
-      dockerfile: docker/customer-service/Dockerfile
+      dockerfile: docker/customer/Dockerfile
     container_name: customer
     ports:
       - '3002:3002' # HTTP API
@@ -12,10 +12,10 @@ services:
     networks:
       - comcore_net
 
-  order-service:
+  order:
     build:
       context: .
-      dockerfile: docker/order-service/Dockerfile
+      dockerfile: docker/order/Dockerfile
     container_name: order
     ports:
       - '3001:3001'
@@ -31,7 +31,7 @@ services:
       - '3003:3003'
     depends_on:
       - redis
-      - customer-service
+      - customer
     networks:
       - comcore_net
 
@@ -43,8 +43,8 @@ services:
     ports:
       - '3000:80' # expose nginx on host: http://localhost:3000
     depends_on:
-      - customer-service
-      - order-service
+      - customer
+      - order
       - redis
     networks:
       - comcore_net

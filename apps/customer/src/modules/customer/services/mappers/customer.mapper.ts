@@ -1,6 +1,6 @@
 import { CustomerModel } from '@app/corecommerce';
 import { Inject, forwardRef } from '@nestjs/common';
-import { ChannelRepositoryFactory } from './../../../channel/providers/channel.repo.provider';
+import { ChannelRepositoryFactory } from '../../../channel/providers/channel.repo.provider';
 import { CUSTOMER_SERVICE, CustomerService } from '../customer.service';
 import { MlamService } from '../mlam.service';
 import {

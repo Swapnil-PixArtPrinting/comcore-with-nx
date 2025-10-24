@@ -7,15 +7,15 @@ WORKDIR /app
 COPY package.json package-lock.json tsconfig.json tsconfig.build.json nest-cli.json ./
 
 # Copy only the app and libs we need
-COPY apps/order-service ./apps/order-service
+COPY apps/order ./apps/order
 COPY libs ./libs
 
 # Install dependencies (uses lockfile)
 RUN npm install
 
-# Build the order-service (workspace-aware)
+# Build the order (workspace-aware)
 # Adjust the script name if your package.json uses a different build command
-RUN npm run build:order-service
+RUN npm run build:order
 # ---------- Stage 2: runtime ----------
 FROM node:20-alpine AS runner
 
@@ -27,8 +27,8 @@ COPY package.json ./
 # Copy node_modules from the builder (contains runtime deps)
 COPY --from=builder /app/node_modules ./node_modules
 
-# Copy build output for order-service
-COPY --from=builder /app/dist/apps/order-service ./dist
+# Copy build output for order
+COPY --from=builder /app/dist/apps/order ./dist
 
 # Expose the port your app listens on
 EXPOSE 3001

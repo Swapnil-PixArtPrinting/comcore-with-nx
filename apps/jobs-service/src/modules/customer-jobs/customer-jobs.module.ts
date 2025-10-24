@@ -17,7 +17,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         options: {
           package: 'customer',
           protoPath: '/app/proto/customer-job.proto',
-          url: 'customer-service:50051',
+          url: 'customer:50051',
         },
       },
     ]),

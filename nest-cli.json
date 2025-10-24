@@ -46,22 +46,22 @@
         "tsConfigPath": "libs/corecommerce/tsconfig.lib.json"
       }
     },
-    "customer-service": {
+    "customer": {
       "type": "application",
-      "root": "apps/customer-service",
+      "root": "apps/customer",
       "entryFile": "main",
-      "sourceRoot": "apps/customer-service/src",
+      "sourceRoot": "apps/customer/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/customer-service/tsconfig.app.json"
+        "tsConfigPath": "apps/customer/tsconfig.app.json"
       }
     },
-    "order-service": {
+    "order": {
       "type": "application",
-      "root": "apps/order-service",
+      "root": "apps/order",
       "entryFile": "main",
-      "sourceRoot": "apps/order-service/src",
+      "sourceRoot": "apps/order/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/order-service/tsconfig.app.json"
+        "tsConfigPath": "apps/order/tsconfig.app.json"
       }
     },
     "jobs-service": {

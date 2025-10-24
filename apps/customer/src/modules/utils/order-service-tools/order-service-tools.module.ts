@@ -1,6 +1,6 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { OrderServiceToolsService } from './order-service-tools.service';
-import { RequestClientModule, OrderServiceClient } from '@app/clientskit';
+import { OrderServiceClient } from '@app/clientskit';
 import { ConfigService } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { LoggerModule, RedisCacheModule, WorkspaceModule } from '@app/common';
